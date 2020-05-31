@@ -1,14 +1,14 @@
 import React from 'react';
 import { hot } from 'react-hot-loader';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { DemoContainer } from './Demo';
+import { ChatterboxContainer } from './Chatterbox';
 
 const App: React.FunctionComponent = () => {
 	return (
 		<Switch>
-			<Route exact path="/demo" component={DemoContainer} />
+			<Route exact path="/chatterbox" component={ChatterboxContainer} />
 			{/* Redirect insures we always have something sensible to render */}
-			<Redirect to="/demo" />
+			<Redirect to="/chatterbox" />
 		</Switch>
 	);
 };

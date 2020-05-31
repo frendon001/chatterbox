@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import path from 'path';
 import helmet from 'helmet';
 import api from './api';
+import initWebSocket from './websocket';
 
 const app = express();
 // Set various headers for protection
@@ -27,6 +28,7 @@ if (process.env.NODE_ENV === 'production') {
 		res.sendFile(path.resolve(__dirname, '../../dist', 'generated.html'));
 	});
 }
+initWebSocket();
 
 const PORT = process.env.PORT || 3030;
 app.listen(PORT);

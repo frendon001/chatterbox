@@ -1,4 +1,5 @@
 import React, { CSSProperties } from 'react';
+import Chat from '../Chat';
 
 const headerStyle: CSSProperties = {
 	color: '#4793e0',
@@ -8,12 +9,13 @@ const headerStyle: CSSProperties = {
 		'-1px 0 #22242638, 0 1px #22242638, 1px 0 #22242638, 0 -1px #22242638',
 };
 
-const DemoContainer: React.FunctionComponent = () => {
+const ChatterboxContainer: React.FunctionComponent = () => {
 	return (
 		<div>
-			<h1 style={headerStyle}>React Starter</h1>
+			<h1 style={headerStyle}>Chatterbox</h1>
+			<Chat />
 		</div>
 	);
 };
 
-export default DemoContainer;
+export default ChatterboxContainer;
