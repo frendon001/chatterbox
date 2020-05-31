@@ -1,14 +1,13 @@
-# react-typescript-fullstack-starter
+# chatterbox
 
-A starter template for a Full-Stack application with react, typescript, webpack,
-and babel
+A simple chat application implemented with web-sockets
 
 ## Installation
 
 **1.** Clone or Download the repository
 
 ```
-git clone https://github.com/frendon001/react-typescript-fullstack-starter.git
+git clone https://github.com/frendon001/chatterbox.git
 ```
 
 **2.** Install libraries in root directory:

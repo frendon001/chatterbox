@@ -1,7 +1,7 @@
 {
-	"name": "react-typescript-fullstack-starter",
+	"name": "chatterbox",
 	"version": "1.0.0",
-	"description": "A starter template for a Full-Stack application with react, typescript, webpack, and babel",
+	"description": "A simple chat application implemented with web-sockets",
 	"main": "build/server/index.js",
 	"scripts": {
 		"start": "NODE_ENV=production node build/server/index.js",
@@ -23,14 +23,14 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/frendon001/react-typescript-fullstack-starter.git"
+		"url": "git+https://github.com/frendon001/chatterbox.git"
 	},
 	"author": "Fausto Rendon",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/frendon001/react-typescript-fullstack-starter/issues"
+		"url": "https://github.com/frendon001/chatterbox/issues"
 	},
-	"homepage": "https://github.com/frendon001/react-typescript-fullstack-starter#readme",
+	"homepage": "https://github.com/frendon001/chatterbox#readme",
 	"dependencies": {
 		"@types/express": "^4.17.6",
 		"@types/helmet": "0.0.47",
