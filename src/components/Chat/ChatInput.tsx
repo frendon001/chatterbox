@@ -6,7 +6,6 @@ interface IChatInputState {
 
 interface IChatInputProps {
 	onSubmitMessage(message: string): void;
-	ws: WebSocket;
 }
 
 class ChatInput extends Component<IChatInputProps, IChatInputState> {

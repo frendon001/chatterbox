@@ -1,14 +1,14 @@
 import React from 'react';
 
 interface IChatMessage {
-	name: string;
+	username: string;
 	message: string;
 }
 
-const ChatMessage = ({ name, message }: IChatMessage): JSX.Element => {
+const ChatMessage = ({ username, message }: IChatMessage): JSX.Element => {
 	return (
 		<p>
-			<strong>{name}</strong> <em>{message}</em>
+			<strong>{username}</strong> {message}
 		</p>
 	);
 };
