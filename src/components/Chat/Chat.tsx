@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import ChatInput from './ChatInput';
 import ChatMessage from './ChatMessage';
-// TODO: create config folder at root
-const URL = 'ws://localhost:3000';
+import { config } from '../../config';
 
+// TODO: create config folder at root
+const URL = `ws://${config.PORT_CLIENT}`;
+// console.log(`ws://${location.host}`);
 interface IChatState {
 	name: string;
 	messages: IMessage[];
@@ -25,6 +27,7 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 	ws = new WebSocket(URL);
 
 	componentDidMount(): void {
+		console.log(`ws://${location.host}`);
 		this.ws.onopen = () => {
 			// on connecting, do nothing but log it to the console
 			console.log('connected');
@@ -39,9 +42,9 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 		this.ws.onclose = () => {
 			console.log('disconnected');
 			// automatically try to reconnect on connection loss
-			this.setState({
-				ws: new WebSocket(URL),
-			});
+			// this.setState({
+			// 	ws: new WebSocket(URL),
+			// });
 		};
 	}
 

@@ -4,6 +4,7 @@ import path from 'path';
 import helmet from 'helmet';
 import api from './api';
 import initWebSocket from './websocket';
+import { config } from '../config';
 
 const app = express();
 // Set various headers for protection
@@ -29,8 +30,6 @@ if (process.env.NODE_ENV === 'production') {
 	});
 }
 initWebSocket();
-
-const PORT = process.env.PORT || 3030;
-app.listen(PORT);
+app.listen(config.PORT_SERVER);
 
 module.exports = app;
