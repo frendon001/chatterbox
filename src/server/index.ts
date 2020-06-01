@@ -3,7 +3,8 @@ import bodyParser from 'body-parser';
 import path from 'path';
 import helmet from 'helmet';
 import api from './api';
-import initWebSocket from './websocket';
+import http from 'http';
+import initWebSocket from './websockets';
 import { config } from '../config';
 
 const app = express();
@@ -29,7 +30,9 @@ if (process.env.NODE_ENV === 'production') {
 		res.sendFile(path.resolve(__dirname, '../../dist', 'generated.html'));
 	});
 }
-initWebSocket();
-app.listen(config.PORT_SERVER);
+// Create Http Server
+const server = http.createServer(app);
+initWebSocket(server);
+server.listen(config.PORT_SERVER);
 
-module.exports = app;
+module.exports = server;

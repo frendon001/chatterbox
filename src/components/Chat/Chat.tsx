@@ -4,7 +4,7 @@ import ChatMessage from './ChatMessage';
 import { config } from '../../config';
 
 // TODO: create config folder at root
-const URL = `ws://${config.PORT_CLIENT}`;
+const URL = `ws://${config.WEBSOCKET_HOST}/chat`;
 // console.log(`ws://${location.host}`);
 interface IChatState {
 	name: string;
