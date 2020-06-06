@@ -2,18 +2,14 @@ import React, { Component } from 'react';
 import UsernameInput from './UsernameInput';
 import ChatInput from './ChatInput';
 import ChatMessage from './ChatMessage';
-import { config } from '../../config';
+import { clientSocket, IClientSocket } from '../../client-socket';
 
-// TODO: create config folder at root
-const URL = `ws://${config.WEBSOCKET_HOST}/chat`;
-// console.log(`ws://${location.host}`);
 interface IChatState {
 	username: string;
 	messages: IMessage[];
-	ws: WebSocket | null;
 }
 
-interface IMessage {
+export interface IMessage {
 	username: string;
 	message: string;
 }
@@ -22,10 +18,9 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 	state: IChatState = {
 		username: '',
 		messages: [],
-		ws: null,
 	};
 
-	ws = new WebSocket(URL);
+	ws: IClientSocket = clientSocket();
 
 	addMessage = (message: IMessage): void =>
 		this.setState(state => ({ messages: [...state.messages, message] }));
@@ -36,7 +31,7 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 			username: this.state.username,
 			message: messageString,
 		};
-		this.ws.send(JSON.stringify(message));
+		this.ws.sendMessage(message);
 		this.addMessage(message);
 	};
 
@@ -44,25 +39,7 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 		console.log(`Added user: ${inputUsername}`);
 		this.setState({ username: inputUsername });
 		console.log(this.state);
-		this.ws = new WebSocket(URL);
-		this.ws.onopen = () => {
-			// on connecting, do nothing but log it to the console
-			console.log('connected');
-		};
-
-		this.ws.onmessage = evt => {
-			// on receiving a message, add it to the list of messages
-			const message = JSON.parse(evt.data);
-			this.addMessage(message);
-		};
-
-		this.ws.onclose = () => {
-			console.log('disconnected');
-			// automatically try to reconnect on connection loss
-			// this.setState({
-			// 	ws: new WebSocket(URL),
-			// });
-		};
+		this.ws.init(this.addMessage);
 	};
 
 	render(): JSX.Element {
