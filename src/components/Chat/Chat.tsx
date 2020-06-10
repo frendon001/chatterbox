@@ -1,51 +1,85 @@
 import React, { Component } from 'react';
-import UsernameInput from './UsernameInput';
+import SelectChatroom from './SelectChatroom';
 import ChatInput from './ChatInput';
 import ChatMessage from './ChatMessage';
 import { clientSocket, IClientSocket } from '../../client-socket';
 
 interface IChatState {
+	chatroomName: string;
+	chatHistory: IChatMessage[];
 	username: string;
-	messages: IMessage[];
 }
 
-export interface IMessage {
+export interface IChatMessage {
 	username: string;
 	message: string;
+}
+
+export interface IMessage<T> {
+	chatroomName: string;
+	data: T;
+	type: string;
 }
 
 class Chat extends Component<Record<string, unknown>, IChatState> {
 	state: IChatState = {
 		username: '',
-		messages: [],
+		chatHistory: [],
+		chatroomName: '',
 	};
 
 	ws: IClientSocket = clientSocket();
 
-	addMessage = (message: IMessage): void =>
-		this.setState(state => ({ messages: [...state.messages, message] }));
+	componentDidMount(): void {
+		this.ws.init(this.addMessage);
+	}
+
+	addMessage = (chatMessage: IChatMessage): void => {
+		console.log('addMessage: ', chatMessage);
+		this.setState(state => ({
+			chatHistory: [...state.chatHistory, chatMessage],
+		}));
+	};
 
 	submitMessage = (messageString: string): void => {
 		// on submitting the ChatInput form, send the message, add it to the list and reset the input
-		const message = {
+		const data = {
 			username: this.state.username,
 			message: messageString,
 		};
+		const message = {
+			type: 'chatMessage',
+			chatroomName: this.state.chatroomName,
+			data,
+		};
 		this.ws.sendMessage(message);
-		this.addMessage(message);
+		this.addMessage(data);
 	};
 
-	addNewUser = (inputUsername: string): void => {
+	addNewUser = (inputUsername: string, chatroomName: string): void => {
 		console.log(`Added user: ${inputUsername}`);
-		this.setState({ username: inputUsername });
+		this.setState({ username: inputUsername, chatroomName });
 		console.log(this.state);
-		this.ws.init(this.addMessage);
+		this.ws.sendMessage({
+			chatroomName,
+			type: 'register',
+			data: { username: inputUsername },
+		});
+		setTimeout(
+			() =>
+				this.ws.sendMessage({
+					chatroomName,
+					type: 'join',
+					data: { username: inputUsername },
+				}),
+			1000,
+		);
 	};
 
 	render(): JSX.Element {
 		return (
 			<div>
-				{this.state.messages.map((message, index) => (
+				{this.state.chatHistory.map((message, index) => (
 					<ChatMessage
 						key={index}
 						message={message.message}
@@ -54,14 +88,14 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 				))}
 				{this.state.username ? (
 					<ChatInput
-						onSubmitMessage={messageString =>
+						onSubmitChatMessage={messageString =>
 							this.submitMessage(messageString)
 						}
 					/>
 				) : (
-					<UsernameInput
-						onSubmitUsername={inputUsername =>
-							this.addNewUser(inputUsername)
+					<SelectChatroom
+						onSubmitUsername={(inputUsername, chatroomName) =>
+							this.addNewUser(inputUsername, chatroomName)
 						}
 					/>
 				)}

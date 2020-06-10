@@ -1,14 +1,14 @@
-import { config } from '../config';
-import { IMessage } from '../components/Chat';
+import config from '../config';
+import { IMessage, IChatMessage } from '../components/Chat';
 
 const URL = `ws://${config.WEBSOCKET_HOST}/chat`;
 
 export interface IClientSocket {
-	init: (addMessage: (message: IMessage) => void) => void;
+	init: (addMessage: (message: IChatMessage) => void) => void;
 	// register: (name: any, cb: any) => void;
 	// join: (chatroomName: any, cb: any) => void;
 	// leave: (chatroomName: any, cb: any) => void;
-	sendMessage: (message: IMessage) => void;
+	sendMessage: <T>(message: IMessage<T>) => void;
 	// getChatrooms: (cb: any) => void;
 	// getAvailableUsers: (cb: any) => void;
 	// registerHandler: (onMessageReceived: any) => void;
@@ -18,14 +18,17 @@ export interface IClientSocket {
 export const clientSocket = (): IClientSocket => {
 	let ws: WebSocket | null = null;
 
-	const init = (addMessage: (message: IMessage) => void) => {
+	const init = (addMessage: (message: IChatMessage) => void) => {
 		if (ws) {
 			ws.onerror = ws.onopen = ws.onclose = null;
 			ws.close();
 		}
 		ws = new WebSocket(URL);
 		ws.onerror = () => {
-			addMessage({ username: '', message: 'WebSocket error' });
+			addMessage({
+				message: 'WebSocket error',
+				username: '',
+			});
 			console.log('WebSocket error');
 		};
 		ws.onopen = () => {
@@ -45,16 +48,23 @@ export const clientSocket = (): IClientSocket => {
 		};
 		ws.onmessage = evt => {
 			// on receiving a message, add it to the list of messages
-			const message = JSON.parse(evt.data);
-			addMessage(message);
+
+			console.log(JSON.parse(evt.data));
+			const { type, data } = JSON.parse(evt.data);
+			if (type === 'chatMessage') {
+				addMessage(data as IChatMessage);
+			}
 		};
 		// ws.on('error', function (err) {
 		// 	console.log('received socket error:');
 		// 	console.log(err);
 		// });
+		ws.addEventListener('register', () => {
+			console.log('test');
+		});
 	};
 
-	const sendMessage = (message: IMessage) => {
+	const sendMessage = <T>(message: IMessage<T>) => {
 		ws?.send(JSON.stringify(message));
 	};
 

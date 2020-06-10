@@ -5,7 +5,7 @@ interface IChatInputState {
 }
 
 interface IChatInputProps {
-	onSubmitMessage(message: string): void;
+	onSubmitChatMessage(message: string): void;
 }
 
 class ChatInput extends Component<IChatInputProps, IChatInputState> {
@@ -22,7 +22,7 @@ class ChatInput extends Component<IChatInputProps, IChatInputState> {
 				action="."
 				onSubmit={e => {
 					e.preventDefault();
-					this.props.onSubmitMessage(this.state.message);
+					this.props.onSubmitChatMessage(this.state.message);
 					this.setState({ message: '' });
 				}}
 			>

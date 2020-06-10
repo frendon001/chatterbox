@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import api from './api';
 import http from 'http';
 import initWebSocket from './websockets';
-import { config } from '../config';
+import config from '../config';
 
 const app = express();
 // Set various headers for protection

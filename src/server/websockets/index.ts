@@ -1,7 +1,10 @@
 import http from 'http';
 import WebSocket from 'ws';
 import url from 'url';
-import { connection } from './events';
+import { connection } from './server-websocket';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const uuid = require('uuid');
 
 const initWebSocket = (server: http.Server): void => {
 	// Create websocket on server
@@ -12,14 +15,16 @@ const initWebSocket = (server: http.Server): void => {
 		console.log('Upgrading request...');
 		// Route websocket based on path name
 		if (pathName === '/chat') {
-			wss.handleUpgrade(request, socket, head, function (ws) {
-				wss.emit('connection', ws);
+			wss.handleUpgrade(request, socket, head, function (client) {
+				const clientId = uuid.v4();
+				wss.emit('connection', { client, clientId });
 			});
 		} else {
 			socket.destroy();
 		}
 	});
 	// Apply logic on websocket connection
+
 	wss.on('connection', connection(wss));
 };
 
