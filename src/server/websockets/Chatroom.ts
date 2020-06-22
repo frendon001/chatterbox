@@ -29,8 +29,6 @@ const Chatroom = ({ name, color }: IChatroomInput): IChatroomResult => {
 	let chatHistory: IChatroomMessage[] = [];
 
 	function broadcastMessage(message: IMessage<IChatMessage>) {
-		//change to send?
-		console.log('SEND');
 		members.forEach(m => m.send(JSON.stringify(message)));
 	}
 

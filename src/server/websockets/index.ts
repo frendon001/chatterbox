@@ -1,7 +1,7 @@
 import http from 'http';
 import WebSocket from 'ws';
 import url from 'url';
-import { connection } from './server-websocket';
+import { handleConnection } from './server-websocket';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const uuid = require('uuid');
@@ -25,7 +25,7 @@ const initWebSocket = (server: http.Server): void => {
 	});
 	// Apply logic on websocket connection
 
-	wss.on('connection', connection(wss));
+	wss.on('connection', handleConnection);
 };
 
 export default initWebSocket;
