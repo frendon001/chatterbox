@@ -50,10 +50,10 @@ export const clientSocket = (): IClientSocket => {
 			// on receiving a message, add it to the list of messages
 
 			console.log(JSON.parse(evt.data));
-			const { type, data } = JSON.parse(evt.data);
-			if (type === 'chatMessage') {
+			const { event, data } = JSON.parse(evt.data);
+			if (event === 'chatMessage') {
 				addMessage(data as IChatMessage);
-			} else if (type === 'chatHistory') {
+			} else if (event === 'chatHistory') {
 				addMessage(data as IChatMessage);
 			}
 		};

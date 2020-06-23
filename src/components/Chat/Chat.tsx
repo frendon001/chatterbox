@@ -18,7 +18,7 @@ export interface IChatMessage {
 export interface IMessage<T> {
 	chatroomName: string;
 	data: T;
-	type: string;
+	event: string;
 }
 
 class Chat extends Component<Record<string, unknown>, IChatState> {
@@ -54,12 +54,11 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 			message: messageString,
 		};
 		const message = {
-			type: 'chatMessage',
+			event: 'chatMessage',
 			chatroomName: this.state.chatroomName,
 			data,
 		};
 		this.ws.sendMessage(message);
-		// this.addMessage(data);
 	};
 
 	addNewUser = (inputUsername: string, chatroomName: string): void => {
@@ -68,14 +67,14 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 		console.log(this.state);
 		this.ws.sendMessage({
 			chatroomName,
-			type: 'register',
+			event: 'register',
 			data: { username: inputUsername },
 		});
 		setTimeout(
 			() =>
 				this.ws.sendMessage({
 					chatroomName,
-					type: 'join',
+					event: 'join',
 					data: { username: inputUsername },
 				}),
 			1000,

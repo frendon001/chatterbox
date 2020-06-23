@@ -73,7 +73,7 @@ const handleEventHelper = (
 			chatroom.broadcastMessage({
 				chatroomName,
 				data: entry,
-				type: 'chatMessage',
+				event: 'chatMessage',
 			});
 			return chatroom;
 		});
@@ -120,11 +120,10 @@ const makeHandlers = (
 
 				// send chat history to client
 				const data = chatroom.getChatHistory();
-				console.log('CHATHISTORY', data);
 				if (data.length) {
 					const chatHistory = {
 						chatroomName,
-						type: 'chatHistory',
+						event: 'chatHistory',
 						data,
 					};
 					client.send(JSON.stringify(chatHistory));
@@ -180,8 +179,8 @@ const makeHandlers = (
 		dataString: string,
 	) => {
 		console.log(dataString);
-		const { type }: IMessage<null> = JSON.parse(dataString);
-		switch (type) {
+		const { event }: IMessage<null> = JSON.parse(dataString);
+		switch (event) {
 			case 'chatMessage':
 				console.log('test');
 				client.emit('chatMessage', dataString);
@@ -193,7 +192,7 @@ const makeHandlers = (
 				client.emit('join', dataString);
 				break;
 			default:
-				console.log(`Unmatched message type: ${type}`);
+				console.log(`Unmatched message event: ${event}`);
 		}
 	};
 
