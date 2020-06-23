@@ -119,7 +119,16 @@ const makeHandlers = (
 				chatroom.addUser(clientId, client);
 
 				// send chat history to client
-				//callback(null, chatroom.getChatHistory());
+				const data = chatroom.getChatHistory();
+				console.log('CHATHISTORY', data);
+				if (data.length) {
+					const chatHistory = {
+						chatroomName,
+						type: 'chatHistory',
+						data,
+					};
+					client.send(JSON.stringify(chatHistory));
+				}
 			})
 			.catch(err => console.log(err));
 	};
@@ -127,7 +136,7 @@ const makeHandlers = (
 	const handleLeave = (chatroomName: string, username: string) => {
 		const createEntry = () => ({
 			username,
-			message: `joined ${chatroomName}`,
+			message: `left ${chatroomName}`,
 		});
 
 		handleEvent(chatroomName, createEntry)

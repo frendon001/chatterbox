@@ -53,20 +53,22 @@ export const clientSocket = (): IClientSocket => {
 			const { type, data } = JSON.parse(evt.data);
 			if (type === 'chatMessage') {
 				addMessage(data as IChatMessage);
+			} else if (type === 'chatHistory') {
+				addMessage(data as IChatMessage);
 			}
 		};
-		// ws.on('error', function (err) {
-		// 	console.log('received socket error:');
-		// 	console.log(err);
-		// });
 		ws.addEventListener('register', () => {
-			console.log('test');
+			console.log('Register TEST');
 		});
 	};
 
 	const sendMessage = <T>(message: IMessage<T>) => {
 		ws?.send(JSON.stringify(message));
 	};
+
+	// const register = (cb: EventListenerOrEventListenerObject) => {
+	// 	ws?.addEventListener('register', cb);
+	// };
 
 	// function registerHandler(onMessageReceived) {
 	// 	// socket.on('message', onMessageReceived);

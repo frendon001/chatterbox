@@ -34,6 +34,7 @@ const Chatroom = ({ name, color }: IChatroomInput): IChatroomResult => {
 
 	function addEntry(entry: IChatroomMessage) {
 		chatHistory = chatHistory.concat(entry);
+		console.log('chatHISTORY', chatHistory);
 	}
 
 	function getChatHistory() {

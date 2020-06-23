@@ -34,11 +34,17 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 		this.ws.init(this.addMessage);
 	}
 
-	addMessage = (chatMessage: IChatMessage): void => {
+	addMessage = (chatMessage: IChatMessage | IChatMessage[]): void => {
 		console.log('addMessage: ', chatMessage);
-		this.setState(state => ({
-			chatHistory: [...state.chatHistory, chatMessage],
-		}));
+		if (Array.isArray(chatMessage)) {
+			this.setState(state => ({
+				chatHistory: [...state.chatHistory, ...chatMessage],
+			}));
+		} else {
+			this.setState(state => ({
+				chatHistory: [...state.chatHistory, chatMessage],
+			}));
+		}
 	};
 
 	submitMessage = (messageString: string): void => {
@@ -53,7 +59,7 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 			data,
 		};
 		this.ws.sendMessage(message);
-		this.addMessage(data);
+		// this.addMessage(data);
 	};
 
 	addNewUser = (inputUsername: string, chatroomName: string): void => {
