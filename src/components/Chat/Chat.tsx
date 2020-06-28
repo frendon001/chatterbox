@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import SelectChatroom from './SelectChatroom';
 import ChatInput from './ChatInput';
-import ChatMessage from './ChatMessage';
+import ChatHistory from './ChatHistory';
 import { clientSocket, IClientSocket } from '../../client-socket';
 
 interface IChatState {
@@ -87,19 +87,15 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 	render(): JSX.Element {
 		return (
 			<div>
-				{this.state.chatHistory.map((message, index) => (
-					<ChatMessage
-						key={index}
-						message={message.message}
-						username={message.username}
-					/>
-				))}
 				{this.state.username ? (
-					<ChatInput
-						onSubmitChatMessage={messageString =>
-							this.submitMessage(messageString)
-						}
-					/>
+					<>
+						<ChatHistory chatHistory={this.state.chatHistory} />
+						<ChatInput
+							onSubmitChatMessage={messageString =>
+								this.submitMessage(messageString)
+							}
+						/>
+					</>
 				) : (
 					<SelectChatroom
 						onSubmitUsername={(inputUsername, chatroomName) =>
