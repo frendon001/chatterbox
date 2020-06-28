@@ -6,10 +6,12 @@ const URL = `ws://${config.WEBSOCKET_HOST}/chat`;
 export interface IClientSocket {
 	init: (addMessage: (message: IChatMessage) => void) => void;
 	handleEvent: (eventName: string, callback: any) => void;
+	dispatch: (event_name: string, message: any) => void;
 	// join: (chatroomName: any, cb: any) => void;
 	// leave: (chatroomName: any, cb: any) => void;
 	sendMessage: <T>(message: IMessage<T>) => void;
-	// getChatrooms: (cb: any) => void;
+	registerUser: (inputUsername: string, chatroomName: string) => void;
+	joinChatroom: (inputUsername: string, chatroomName: string) => void;
 	// getAvailableUsers: (cb: any) => void;
 	// registerHandler: (onMessageReceived: any) => void;
 	// unregisterHandler: () => void;
@@ -85,6 +87,32 @@ export const clientSocket = (): IClientSocket => {
 		}
 	};
 
+	const registerUser = (
+		inputUsername: string,
+		chatroomName: string,
+	): void => {
+		console.log(`Added user: ${inputUsername}`);
+		sendMessage({
+			chatroomName,
+			event: 'register',
+			data: { username: inputUsername },
+		});
+	};
+
+	const joinChatroom = (
+		inputUsername: string,
+		chatroomName: string,
+	): void => {
+		console.log(
+			`user: ${inputUsername} requesting to join ${chatroomName}`,
+		);
+		sendMessage({
+			chatroomName,
+			event: 'join',
+			data: { username: inputUsername },
+		});
+	};
+
 	// const register = (cb: EventListenerOrEventListenerObject) => {
 	// 	ws?.addEventListener('register', cb);
 	// };
@@ -129,11 +157,11 @@ export const clientSocket = (): IClientSocket => {
 	return {
 		init,
 		handleEvent,
-		// join,
+		dispatch,
 		// leave,
 		sendMessage,
-		// getChatrooms,
-		// getAvailableUsers,
+		registerUser,
+		joinChatroom,
 		// registerHandler,
 		// unregisterHandler,
 	};

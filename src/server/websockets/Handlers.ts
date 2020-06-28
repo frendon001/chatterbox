@@ -62,12 +62,10 @@ const handleEventHelper = (
 	) => {
 		return ensureValidChatroomAndUserSelected(chatroomName).then(function ({
 			chatroom,
-			username,
 		}: IEnsureValidChatroomAndUserSelected) {
 			// append event to chat history
 			const entry = createEntry();
 			chatroom.addEntry(entry);
-			console.log(username);
 
 			// notify other clients in chatroom
 			chatroom.broadcastMessage({
@@ -95,12 +93,20 @@ const makeHandlers = (
 
 	const handleRegister = (dataString: string) => {
 		const {
+			chatroomName,
 			data: { username },
 		}: IMessage<IChatMessage> = JSON.parse(dataString);
-		if (!clientManager.isUserAvailable(username))
-			console.log('user is not available');
+		const registerResult = {
+			chatroomName,
+			event: 'registerUser',
+			data: { errorMessage: '', username, chatroomName },
+		};
+		if (!clientManager.isUserAvailable(username)) {
+			registerResult.data.errorMessage = `The selected username: ${username} is unavailable. `;
+		}
 
 		clientManager.registerClient(clientId, client, username);
+		client.send(JSON.stringify(registerResult));
 	};
 
 	const handleJoin = (dataString: string) => {
@@ -112,11 +118,16 @@ const makeHandlers = (
 			username,
 			message: `joined ${chatroomName}`,
 		});
-
+		const joinedChatroomResult = {
+			chatroomName,
+			event: 'joinChatroom',
+			data: { errorMessage: '', username, chatroomName },
+		};
 		handleEvent(chatroomName, createEntry)
 			.then(function (chatroom) {
 				// add member to chatroom
 				chatroom.addUser(clientId, client);
+				client.send(JSON.stringify(joinedChatroomResult));
 
 				// send chat history to client
 				const data = chatroom.getChatHistory();
@@ -129,7 +140,10 @@ const makeHandlers = (
 					client.send(JSON.stringify(chatHistory));
 				}
 			})
-			.catch(err => console.log(err));
+			.catch(err => {
+				joinedChatroomResult.data.errorMessage = `Unable to join chatroom: ${err.message}`;
+				client.send(JSON.stringify(joinedChatroomResult));
+			});
 	};
 
 	const handleLeave = (chatroomName: string, username: string) => {

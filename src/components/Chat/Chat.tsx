@@ -34,6 +34,8 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 		this.ws.init(this.addMessage);
 		this.ws.handleEvent('chatMessage', this.addMessage);
 		this.ws.handleEvent('chatHistory', this.addChatHistory);
+		this.ws.handleEvent('joinChatroom', this.handleJoinedChatroom);
+		this.ws.handleEvent('registerUser', this.handleUserRegistration);
 	}
 
 	addMessage = (chatMessage: IChatMessage): void => {
@@ -43,10 +45,10 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 		}));
 	};
 
-	addChatHistory = (chatMessage: IChatMessage[]): void => {
-		console.log('addChatHistory: ', chatMessage);
+	addChatHistory = (chatHistory: IChatMessage[]): void => {
+		console.log('addChatHistory: ', chatHistory);
 		this.setState(state => ({
-			chatHistory: [...state.chatHistory, ...chatMessage],
+			chatHistory: [...state.chatHistory, ...chatHistory],
 		}));
 	};
 
@@ -64,30 +66,61 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 		this.ws.sendMessage(message);
 	};
 
-	addNewUser = (inputUsername: string, chatroomName: string): void => {
-		console.log(`Added user: ${inputUsername}`);
-		this.setState({ username: inputUsername, chatroomName });
-		console.log(this.state);
-		this.ws.sendMessage({
-			chatroomName,
-			event: 'register',
-			data: { username: inputUsername },
-		});
-		setTimeout(
-			() =>
-				this.ws.sendMessage({
-					chatroomName,
-					event: 'join',
-					data: { username: inputUsername },
-				}),
-			1000,
-		);
+	handleUserRegistration = ({
+		errorMessage,
+		username,
+		chatroomName,
+	}: {
+		errorMessage: string;
+		username: string;
+		chatroomName: string;
+	}): void => {
+		if (errorMessage) {
+			console.log(errorMessage);
+		} else {
+			this.setState({ username });
+			this.ws.joinChatroom(username, chatroomName);
+		}
 	};
+
+	handleJoinedChatroom = ({
+		errorMessage,
+		chatroomName,
+	}: {
+		errorMessage: string;
+		chatroomName: string;
+	}): void => {
+		if (errorMessage) {
+			console.log(errorMessage);
+		} else {
+			this.setState({ chatroomName });
+		}
+	};
+
+	// addNewUser = (inputUsername: string, chatroomName: string): void => {
+	// 	console.log(`Added user: ${inputUsername}`);
+	// 	this.setState({ username: inputUsername, chatroomName });
+	// 	console.log(this.state);
+	// 	this.ws.sendMessage({
+	// 		chatroomName,
+	// 		event: 'register',
+	// 		data: { username: inputUsername },
+	// 	});
+	// 	setTimeout(
+	// 		() =>
+	// 			this.ws.sendMessage({
+	// 				chatroomName,
+	// 				event: 'join',
+	// 				data: { username: inputUsername },
+	// 			}),
+	// 		1000,
+	// 	);
+	// };
 
 	render(): JSX.Element {
 		return (
 			<div>
-				{this.state.username ? (
+				{this.state.chatroomName ? (
 					<>
 						<ChatHistory chatHistory={this.state.chatHistory} />
 						<ChatInput
@@ -99,7 +132,7 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 				) : (
 					<SelectChatroom
 						onSubmitUsername={(inputUsername, chatroomName) =>
-							this.addNewUser(inputUsername, chatroomName)
+							this.ws.registerUser(inputUsername, chatroomName)
 						}
 					/>
 				)}
