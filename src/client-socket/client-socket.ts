@@ -5,7 +5,7 @@ const URL = `ws://${config.WEBSOCKET_HOST}/chat`;
 
 export interface IClientSocket {
 	init: (addMessage: (message: IChatMessage) => void) => void;
-	// register: (name: any, cb: any) => void;
+	handleEvent: (eventName: string, callback: any) => void;
 	// join: (chatroomName: any, cb: any) => void;
 	// leave: (chatroomName: any, cb: any) => void;
 	sendMessage: <T>(message: IMessage<T>) => void;
@@ -17,6 +17,7 @@ export interface IClientSocket {
 
 export const clientSocket = (): IClientSocket => {
 	let ws: WebSocket | null = null;
+	const callbacks: { [key: string]: ((message: any) => void)[] } = {};
 
 	const init = (addMessage: (message: IChatMessage) => void) => {
 		if (ws) {
@@ -51,19 +52,37 @@ export const clientSocket = (): IClientSocket => {
 
 			console.log(JSON.parse(evt.data));
 			const { event, data } = JSON.parse(evt.data);
-			if (event === 'chatMessage') {
-				addMessage(data as IChatMessage);
-			} else if (event === 'chatHistory') {
-				addMessage(data as IChatMessage);
-			}
+			// if (event === 'chatMessage') {
+			// 	addMessage(data as IChatMessage);
+			// } else if (event === 'chatHistory') {
+			// 	addMessage(data as IChatMessage);
+			// }
+			dispatch(event, data);
 		};
-		ws.addEventListener('register', () => {
-			console.log('Register TEST');
-		});
 	};
 
 	const sendMessage = <T>(message: IMessage<T>) => {
 		ws?.send(JSON.stringify(message));
+	};
+
+	const handleEvent = (eventName: string, callback: any) => {
+		callbacks[eventName] = callbacks[eventName] || [];
+		callbacks[eventName].push(callback);
+	};
+
+	const dispatch = function (event_name: string, message: any) {
+		try {
+			const chain = callbacks[event_name];
+			if (typeof chain == 'undefined') {
+				return;
+			}
+			for (let i = 0; i < chain.length; i++) {
+				chain[i](message);
+			}
+		} catch (err) {
+			// TODO: update error handling
+			console.log(err.message);
+		}
 	};
 
 	// const register = (cb: EventListenerOrEventListenerObject) => {
@@ -109,7 +128,7 @@ export const clientSocket = (): IClientSocket => {
 
 	return {
 		init,
-		// register,
+		handleEvent,
 		// join,
 		// leave,
 		sendMessage,
