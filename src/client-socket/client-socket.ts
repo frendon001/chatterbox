@@ -87,10 +87,7 @@ export const clientSocket = (): IClientSocket => {
 		}
 	};
 
-	const registerUser = (
-		inputUsername: string,
-		chatroomName: string,
-	): void => {
+	const registerUser = (inputUsername: string, chatroomName: string): void => {
 		console.log(`Added user: ${inputUsername}`);
 		sendMessage({
 			chatroomName,
@@ -99,13 +96,8 @@ export const clientSocket = (): IClientSocket => {
 		});
 	};
 
-	const joinChatroom = (
-		inputUsername: string,
-		chatroomName: string,
-	): void => {
-		console.log(
-			`user: ${inputUsername} requesting to join ${chatroomName}`,
-		);
+	const joinChatroom = (inputUsername: string, chatroomName: string): void => {
+		console.log(`user: ${inputUsername} requesting to join ${chatroomName}`);
 		sendMessage({
 			chatroomName,
 			event: 'join',

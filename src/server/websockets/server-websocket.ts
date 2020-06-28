@@ -7,13 +7,7 @@ import makeHandlers from './Handlers';
 const clientManager = ClientManager();
 const chatroomManager = ChatroomManager();
 
-export const handleConnection = ({
-	client,
-	clientId,
-}: {
-	client: WebSocket;
-	clientId: string;
-}): void => {
+export const handleConnection = ({ client, clientId }: { client: WebSocket; clientId: string }): void => {
 	const {
 		handleMessageRouting,
 		handleRegister,

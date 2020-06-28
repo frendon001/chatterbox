@@ -83,13 +83,7 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 		}
 	};
 
-	handleJoinedChatroom = ({
-		errorMessage,
-		chatroomName,
-	}: {
-		errorMessage: string;
-		chatroomName: string;
-	}): void => {
+	handleJoinedChatroom = ({ errorMessage, chatroomName }: { errorMessage: string; chatroomName: string }): void => {
 		if (errorMessage) {
 			console.log(errorMessage);
 		} else {
@@ -123,11 +117,7 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 				{this.state.chatroomName ? (
 					<>
 						<ChatHistory chatHistory={this.state.chatHistory} />
-						<ChatInput
-							onSubmitChatMessage={messageString =>
-								this.submitMessage(messageString)
-							}
-						/>
+						<ChatInput onSubmitChatMessage={messageString => this.submitMessage(messageString)} />
 					</>
 				) : (
 					<SelectChatroom

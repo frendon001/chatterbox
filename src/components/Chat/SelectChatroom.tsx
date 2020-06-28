@@ -10,10 +10,7 @@ interface ISelectChatroomProps {
 	onSubmitUsername(username: string, chatroom: string): void;
 }
 
-class SelectChatroom extends Component<
-	ISelectChatroomProps,
-	ISelectChatroomState
-> {
+class SelectChatroom extends Component<ISelectChatroomProps, ISelectChatroomState> {
 	constructor(props: ISelectChatroomProps) {
 		super(props);
 	}
@@ -28,10 +25,7 @@ class SelectChatroom extends Component<
 				action="."
 				onSubmit={e => {
 					e.preventDefault();
-					this.props.onSubmitUsername(
-						this.state.username,
-						this.state.chatroom,
-					);
+					this.props.onSubmitUsername(this.state.username, this.state.chatroom);
 					this.setState({ username: '', chatroom: '' });
 				}}
 			>
@@ -47,9 +41,7 @@ class SelectChatroom extends Component<
 				<select
 					name="chatroom"
 					value={this.state.chatroom}
-					onChange={event =>
-						this.setState({ chatroom: event.target.value })
-					}
+					onChange={event => this.setState({ chatroom: event.target.value })}
 				>
 					{config.CHATROOMS.map(chatroom => (
 						<option value={chatroom.name} key={chatroom.name}>

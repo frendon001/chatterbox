@@ -20,11 +20,7 @@ export interface IMakeHandlers {
 	handleDisconnect: () => void;
 }
 
-const handleEventHelper = (
-	clientId: string,
-	clientManager: IClientManager,
-	chatroomManager: IChatroomManager,
-) => {
+const handleEventHelper = (clientId: string, clientManager: IClientManager, chatroomManager: IChatroomManager) => {
 	const ensureExists: <T>(getter: () => T) => Promise<T> = getter => {
 		return new Promise(function (resolve, reject) {
 			try {
@@ -35,31 +31,20 @@ const handleEventHelper = (
 		});
 	};
 	const ensureUserSelected = (clientId: string) => {
-		const result = ensureExists<string>(() =>
-			clientManager.getUserByClientId(clientId),
-		);
+		const result = ensureExists<string>(() => clientManager.getUserByClientId(clientId));
 
 		return result;
 	};
 	const ensureValidChatroom = (chatroomName: string) => {
-		return ensureExists<IChatroomResult>(() =>
-			chatroomManager.getChatroomByName(chatroomName),
-		);
+		return ensureExists<IChatroomResult>(() => chatroomManager.getChatroomByName(chatroomName));
 	};
-	const ensureValidChatroomAndUserSelected = (
-		chatroomName: string,
-	): Promise<IEnsureValidChatroomAndUserSelected> => {
+	const ensureValidChatroomAndUserSelected = (chatroomName: string): Promise<IEnsureValidChatroomAndUserSelected> => {
 		return Promise.all([
 			ensureValidChatroom(chatroomName),
 			ensureUserSelected(clientId),
-		]).then(([chatroom, username]) =>
-			Promise.resolve({ chatroom, username }),
-		);
+		]).then(([chatroom, username]) => Promise.resolve({ chatroom, username }));
 	};
-	const handleEvent = (
-		chatroomName: string,
-		createEntry: () => IChatroomMessage,
-	) => {
+	const handleEvent = (chatroomName: string, createEntry: () => IChatroomMessage) => {
 		return ensureValidChatroomAndUserSelected(chatroomName).then(function ({
 			chatroom,
 		}: IEnsureValidChatroomAndUserSelected) {
@@ -85,11 +70,7 @@ const makeHandlers = (
 	clientManager: IClientManager,
 	chatroomManager: IChatroomManager,
 ): IMakeHandlers => {
-	const handleEvent = handleEventHelper(
-		clientId,
-		clientManager,
-		chatroomManager,
-	);
+	const handleEvent = handleEventHelper(clientId, clientManager, chatroomManager);
 
 	const handleRegister = (dataString: string) => {
 		const {
@@ -162,10 +143,7 @@ const makeHandlers = (
 
 	const handleMessage = (dataString: string) => {
 		console.log('chatMessage');
-		const {
-			chatroomName,
-			data: messageData,
-		}: IMessage<IChatMessage> = JSON.parse(dataString);
+		const { chatroomName, data: messageData }: IMessage<IChatMessage> = JSON.parse(dataString);
 		const createEntry = () => ({ ...messageData });
 		console.log(`Entry: ${JSON.stringify(createEntry())}`);
 
@@ -189,9 +167,7 @@ const makeHandlers = (
 		chatroomManager.removeClient(clientId);
 	};
 
-	const handleMessageRouting = (client: WebSocket) => (
-		dataString: string,
-	) => {
+	const handleMessageRouting = (client: WebSocket) => (dataString: string) => {
 		console.log(dataString);
 		const { event }: IMessage<null> = JSON.parse(dataString);
 		switch (event) {
