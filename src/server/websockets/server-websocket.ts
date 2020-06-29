@@ -32,7 +32,7 @@ export const handleConnection = ({ client, clientId }: { client: WebSocket; clie
 
 	client.on('chatMessage', handleMessage);
 
-	client.on('chatrooms', handleGetChatrooms);
+	client.on('getChatrooms', handleGetChatrooms);
 
 	client.on('isUserAvailable', isUserAvailable);
 

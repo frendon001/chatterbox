@@ -1,12 +1,13 @@
 import { IMessage, IChatMessage } from '../../components/Chat';
 import WebSocket from 'ws';
+import { trimChatHistory } from '../../utils';
 
 export interface IChatroomMessage {
 	username: string;
 	message: string;
 }
 
-export interface IChatroomResult {
+export interface IChatroom {
 	broadcastMessage: (message: IMessage<IChatMessage>) => void;
 	addEntry: (entry: IChatroomMessage) => void;
 	getChatHistory: () => IChatroomMessage[];
@@ -24,7 +25,9 @@ export interface IChatroomInput {
 	color: string;
 }
 
-const Chatroom = ({ name, color }: IChatroomInput): IChatroomResult => {
+const MAX_CHAT_HISTORY_LEN = 500;
+
+const Chatroom = ({ name, color }: IChatroomInput): IChatroom => {
 	const members: Map<string, WebSocket> = new Map();
 	let chatHistory: IChatroomMessage[] = [];
 
@@ -34,6 +37,7 @@ const Chatroom = ({ name, color }: IChatroomInput): IChatroomResult => {
 
 	function addEntry(entry: IChatroomMessage) {
 		chatHistory = chatHistory.concat(entry);
+		chatHistory = trimChatHistory(chatHistory, MAX_CHAT_HISTORY_LEN);
 	}
 
 	function getChatHistory() {
@@ -46,6 +50,9 @@ const Chatroom = ({ name, color }: IChatroomInput): IChatroomResult => {
 
 	function removeUser(clientId: string) {
 		members.delete(clientId);
+		if (members.size === 0) {
+			chatHistory = [];
+		}
 	}
 
 	function serialize() {

@@ -1,11 +1,12 @@
 import WebSocket from 'ws';
 import { IChatroomManager } from './chatroomManager';
 import { IClientManager } from './ClientManager';
-import { IChatroomResult, IChatroomMessage } from './Chatroom';
+import { IChatroom, IChatroomMessage } from './Chatroom';
 import { IMessage, IChatMessage } from '../../components/Chat';
+import { ISocketMessage, IGetChatrooms, ILeaveChatMessage, ILeaveJoinChatroom } from '../../interfaces';
 
 interface IEnsureValidChatroomAndUserSelected {
-	chatroom: IChatroomResult;
+	chatroom: IChatroom;
 	username: string;
 }
 
@@ -36,7 +37,7 @@ const handleEventHelper = (clientId: string, clientManager: IClientManager, chat
 		return result;
 	};
 	const ensureValidChatroom = (chatroomName: string) => {
-		return ensureExists<IChatroomResult>(() => chatroomManager.getChatroomByName(chatroomName));
+		return ensureExists<IChatroom>(() => chatroomManager.getChatroomByName(chatroomName));
 	};
 	const ensureValidChatroomAndUserSelected = (chatroomName: string): Promise<IEnsureValidChatroomAndUserSelected> => {
 		return Promise.all([
@@ -127,18 +128,30 @@ const makeHandlers = (
 			});
 	};
 
-	const handleLeave = (chatroomName: string, username: string) => {
+	const handleLeave = (dataString: string) => {
+		const {
+			data: { chatroomName, username },
+		}: ISocketMessage<ILeaveChatMessage> = JSON.parse(dataString);
 		const createEntry = () => ({
 			username,
 			message: `left ${chatroomName}`,
 		});
-
+		const leaveChatroomResult: ISocketMessage<ILeaveJoinChatroom> = {
+			event: 'leaveChatroom',
+			data: { errorMessage: '', chatroomName: '' },
+		};
 		handleEvent(chatroomName, createEntry)
 			.then(function (chatroom) {
 				// remove member from chatroom
 				chatroom.removeUser(clientId);
+				console.log(JSON.stringify(leaveChatroomResult));
+				client.send(JSON.stringify(leaveChatroomResult));
 			})
-			.catch(err => console.log(err));
+			.catch(err => {
+				leaveChatroomResult.data.chatroomName = chatroomName;
+				leaveChatroomResult.data.errorMessage = `Unable to successfully leave chatroom: ${err.message}`;
+				client.send(JSON.stringify(leaveChatroomResult));
+			});
 	};
 
 	const handleMessage = (dataString: string) => {
@@ -153,7 +166,17 @@ const makeHandlers = (
 	};
 
 	const handleGetChatrooms = () => {
-		console.log(chatroomManager.serializeChatrooms());
+		const getChatroomResult: ISocketMessage<IGetChatrooms> = {
+			event: 'getChatrooms',
+			data: { errorMessage: '', chatrooms: [] },
+		};
+		try {
+			getChatroomResult.data.chatrooms = chatroomManager.serializeChatrooms();
+		} catch (err) {
+			getChatroomResult.data.errorMessage = 'Unable to retrieve available chatrooms.';
+		}
+		console.log(JSON.stringify(getChatroomResult));
+		client.send(JSON.stringify(getChatroomResult));
 	};
 
 	const isUserAvailable = (username: string) => {
@@ -172,7 +195,6 @@ const makeHandlers = (
 		const { event }: IMessage<null> = JSON.parse(dataString);
 		switch (event) {
 			case 'chatMessage':
-				console.log('test');
 				client.emit('chatMessage', dataString);
 				break;
 			case 'register':
@@ -180,6 +202,12 @@ const makeHandlers = (
 				break;
 			case 'join':
 				client.emit('join', dataString);
+				break;
+			case 'getChatrooms':
+				client.emit('getChatrooms');
+				break;
+			case 'leaveChatroom':
+				client.emit('leave', dataString);
 				break;
 			default:
 				console.log(`Unmatched message event: ${event}`);

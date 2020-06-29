@@ -7,14 +7,11 @@ export interface IClientSocket {
 	init: (addMessage: (message: IChatMessage) => void) => void;
 	handleEvent: (eventName: string, callback: any) => void;
 	dispatch: (event_name: string, message: any) => void;
-	// join: (chatroomName: any, cb: any) => void;
-	// leave: (chatroomName: any, cb: any) => void;
 	sendMessage: <T>(message: IMessage<T>) => void;
 	registerUser: (inputUsername: string, chatroomName: string) => void;
 	joinChatroom: (inputUsername: string, chatroomName: string) => void;
-	// getAvailableUsers: (cb: any) => void;
-	// registerHandler: (onMessageReceived: any) => void;
-	// unregisterHandler: () => void;
+	getChatrooms: () => void;
+	leaveChatroom: (username: string, chatroomName: string) => void;
 }
 
 export const clientSocket = (): IClientSocket => {
@@ -40,6 +37,7 @@ export const clientSocket = (): IClientSocket => {
 				message: 'WebSocket connection established',
 			});
 			console.log('WebSocket connection established');
+			getChatrooms();
 		};
 		ws.onclose = () => {
 			addMessage({
@@ -50,15 +48,9 @@ export const clientSocket = (): IClientSocket => {
 			ws = null;
 		};
 		ws.onmessage = evt => {
-			// on receiving a message, add it to the list of messages
-
+			// on receiving a message, use dispatch method to handle event
 			console.log(JSON.parse(evt.data));
 			const { event, data } = JSON.parse(evt.data);
-			// if (event === 'chatMessage') {
-			// 	addMessage(data as IChatMessage);
-			// } else if (event === 'chatHistory') {
-			// 	addMessage(data as IChatMessage);
-			// }
 			dispatch(event, data);
 		};
 	};
@@ -87,74 +79,50 @@ export const clientSocket = (): IClientSocket => {
 		}
 	};
 
-	const registerUser = (inputUsername: string, chatroomName: string): void => {
-		console.log(`Added user: ${inputUsername}`);
+	const registerUser = (username: string, chatroomName: string): void => {
+		console.log(`Added user: ${username}`);
 		sendMessage({
 			chatroomName,
 			event: 'register',
-			data: { username: inputUsername },
+			data: { username },
 		});
 	};
 
-	const joinChatroom = (inputUsername: string, chatroomName: string): void => {
-		console.log(`user: ${inputUsername} requesting to join ${chatroomName}`);
+	const joinChatroom = (username: string, chatroomName: string): void => {
+		console.log(`user: ${username} requesting to join ${chatroomName}`);
 		sendMessage({
 			chatroomName,
 			event: 'join',
-			data: { username: inputUsername },
+			data: { username },
 		});
 	};
 
-	// const register = (cb: EventListenerOrEventListenerObject) => {
-	// 	ws?.addEventListener('register', cb);
-	// };
+	const getChatrooms = (): void => {
+		console.log('retrieve chatrooms');
+		sendMessage({
+			chatroomName: '',
+			event: 'getChatrooms',
+			data: {},
+		});
+	};
 
-	// function registerHandler(onMessageReceived) {
-	// 	// socket.on('message', onMessageReceived);
-	// }
-
-	// function unregisterHandler() {
-	// 	// socket.off('message');
-	// }
-
-	// socket.on('error', function (err) {
-	// 	console.log('received socket error:');
-	// 	console.log(err);
-	// });
-
-	// function register(name, cb) {
-	// 	socket.emit('register', name, cb);
-	// }
-
-	// function join(chatroomName, cb) {
-	// 	socket.emit('join', chatroomName, cb);
-	// }
-
-	// function leave(chatroomName, cb) {
-	// 	socket.emit('leave', chatroomName, cb);
-	// }
-
-	//   function message(chatroomName, msg, cb) {
-	//     socket.emit('message', { chatroomName, message: msg }, cb)
-	//   }
-
-	// function getChatrooms(cb) {
-	// 	socket.emit('chatrooms', null, cb);
-	// }
-
-	// function getAvailableUsers(cb) {
-	// 	socket.emit('availableUsers', null, cb);
-	// }
+	const leaveChatroom = (username: string, chatroomName: string): void => {
+		console.log('leave chatroom');
+		sendMessage({
+			chatroomName: '',
+			event: 'leaveChatroom',
+			data: { username, chatroomName },
+		});
+	};
 
 	return {
 		init,
 		handleEvent,
 		dispatch,
-		// leave,
 		sendMessage,
 		registerUser,
 		joinChatroom,
-		// registerHandler,
-		// unregisterHandler,
+		getChatrooms,
+		leaveChatroom,
 	};
 };

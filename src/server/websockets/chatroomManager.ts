@@ -1,9 +1,9 @@
 import config from '../../config';
-import Chatroom, { IChatroomResult } from './Chatroom';
+import Chatroom, { IChatroom } from './Chatroom';
 
 export interface IChatroomManager {
 	removeClient: (clientId: string) => void;
-	getChatroomByName: (chatroomName: string) => IChatroomResult;
+	getChatroomByName: (chatroomName: string) => IChatroom;
 	serializeChatrooms: () => {
 		name: string;
 		color: string;
@@ -27,7 +27,9 @@ const ChatroomManger = (): IChatroomManager => {
 	}
 
 	function serializeChatrooms() {
-		return Array.from(chatrooms.values()).map(c => c.serialize());
+		return Array.from(chatrooms.values())
+			.map(c => c.serialize())
+			.filter(c => c.numMembers < 10);
 	}
 
 	return {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import config from '../../config';
+import { IChatroomDetails } from '../../interfaces';
 
 interface ISelectChatroomState {
 	username: string;
@@ -8,6 +8,8 @@ interface ISelectChatroomState {
 
 interface ISelectChatroomProps {
 	onSubmitUsername(username: string, chatroom: string): void;
+	chatrooms: IChatroomDetails[];
+	username: string;
 }
 
 class SelectChatroom extends Component<ISelectChatroomProps, ISelectChatroomState> {
@@ -15,8 +17,16 @@ class SelectChatroom extends Component<ISelectChatroomProps, ISelectChatroomStat
 		super(props);
 	}
 	state: Readonly<ISelectChatroomState> = {
-		username: '',
+		username: this.props.username,
 		chatroom: '',
+	};
+
+	generateChatroomList = (): JSX.Element[] => {
+		return this.props.chatrooms.map(chatroom => (
+			<option value={chatroom.name} key={chatroom.name}>
+				{chatroom.name}
+			</option>
+		));
 	};
 
 	render(): JSX.Element {
@@ -29,25 +39,25 @@ class SelectChatroom extends Component<ISelectChatroomProps, ISelectChatroomStat
 					this.setState({ username: '', chatroom: '' });
 				}}
 			>
-				<label htmlFor="enterUserName">Enter a Username:</label>
-				<input
-					name="enterUserName"
-					type="text"
-					placeholder={'Username'}
-					value={this.state.username}
-					onChange={e => this.setState({ username: e.target.value })}
-				/>
+				{!this.props.username && (
+					<>
+						<label htmlFor="enterUserName">Enter a Username:</label>
+						<input
+							name="enterUserName"
+							type="text"
+							placeholder={'Username'}
+							value={this.state.username}
+							onChange={e => this.setState({ username: e.target.value })}
+						/>
+					</>
+				)}
 				<label htmlFor="chatroom">Select a chatroom:</label>
 				<select
 					name="chatroom"
 					value={this.state.chatroom}
 					onChange={event => this.setState({ chatroom: event.target.value })}
 				>
-					{config.CHATROOMS.map(chatroom => (
-						<option value={chatroom.name} key={chatroom.name}>
-							{chatroom.name}
-						</option>
-					))}
+					{this.generateChatroomList()}
 				</select>
 				<input type="submit" value={'Send'} />
 			</form>
