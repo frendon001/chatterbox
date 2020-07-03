@@ -30,7 +30,6 @@ const ClientManager = (): IClientManager => {
 				.filter(c => c.username)
 				.map(c => c.username),
 		);
-		console.log(usersTaken, usersTaken.has(username));
 		return !usersTaken.has(username);
 	};
 

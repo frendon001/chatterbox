@@ -12,7 +12,6 @@ const initWebSocket = (server: http.Server): void => {
 
 	server.on('upgrade', function (request, socket, head) {
 		const pathName = url.parse(request.url).pathname;
-		console.log('Upgrading request...');
 		// Route websocket based on path name
 		if (pathName === '/chat') {
 			wss.handleUpgrade(request, socket, head, function (client) {

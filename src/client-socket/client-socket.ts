@@ -50,7 +50,6 @@ export const clientSocket = (): IClientSocket => {
 		};
 		ws.onmessage = evt => {
 			// on receiving a message, use dispatch method to handle event
-			console.log(JSON.parse(evt.data));
 			const { event, data } = JSON.parse(evt.data);
 			dispatch(event, data);
 		};
@@ -81,7 +80,6 @@ export const clientSocket = (): IClientSocket => {
 	};
 
 	const registerUser = (username: string, chatroomName: string): void => {
-		console.log(`Added user: ${username}`);
 		sendMessage({
 			chatroomName,
 			event: 'register',
@@ -90,7 +88,6 @@ export const clientSocket = (): IClientSocket => {
 	};
 
 	const joinChatroom = (username: string, chatroomName: string): void => {
-		console.log(`user: ${username} requesting to join ${chatroomName}`);
 		sendMessage({
 			chatroomName,
 			event: 'join',
@@ -99,7 +96,6 @@ export const clientSocket = (): IClientSocket => {
 	};
 
 	const getChatrooms = (): void => {
-		console.log('retrieve chatrooms');
 		sendMessage({
 			chatroomName: '',
 			event: 'getChatrooms',
@@ -108,7 +104,6 @@ export const clientSocket = (): IClientSocket => {
 	};
 
 	const leaveChatroom = (username: string, chatroomName: string): void => {
-		console.log('leave chatroom');
 		sendMessage({
 			chatroomName: '',
 			event: 'leaveChatroom',

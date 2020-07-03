@@ -17,7 +17,6 @@ export interface IMakeHandlers {
 	handleLeave: (chatroomName: string, username: string) => void;
 	handleMessage: (data: string) => void;
 	handleGetChatrooms: () => void;
-	isUserAvailable: (username: string) => void;
 	handleDisconnect: () => void;
 }
 
@@ -155,10 +154,8 @@ const makeHandlers = (
 	};
 
 	const handleMessage = (dataString: string) => {
-		console.log('chatMessage');
 		const { chatroomName, data: messageData }: IMessage<IChatMessage> = JSON.parse(dataString);
 		const createEntry = () => ({ ...messageData });
-		console.log(`Entry: ${JSON.stringify(createEntry())}`);
 
 		handleEvent(chatroomName, createEntry)
 			.then()
@@ -178,10 +175,6 @@ const makeHandlers = (
 		client.send(JSON.stringify(getChatroomResult));
 	};
 
-	const isUserAvailable = (username: string) => {
-		console.log(clientManager.isUserAvailable(username));
-	};
-
 	const handleDisconnect = () => {
 		// remove member from all chatrooms
 		chatroomManager.removeClient(clientId);
@@ -190,7 +183,6 @@ const makeHandlers = (
 	};
 
 	const handleMessageRouting = (client: WebSocket) => (dataString: string) => {
-		console.log(dataString);
 		const { event }: IMessage<null> = JSON.parse(dataString);
 		switch (event) {
 			case 'chatMessage':
@@ -223,7 +215,6 @@ const makeHandlers = (
 		handleLeave,
 		handleMessage,
 		handleGetChatrooms,
-		isUserAvailable,
 		handleDisconnect,
 	};
 };

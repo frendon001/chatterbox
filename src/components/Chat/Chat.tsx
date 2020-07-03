@@ -54,19 +54,16 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 	}
 
 	componentCleanup = (): void => {
-		console.log('unmounting...');
 		this.ws.disconnect(this.state.username, this.state.chatroomName);
 	};
 
 	addMessage = (chatMessage: IChatMessage): void => {
-		console.log('addMessage: ', chatMessage);
 		this.setState(state => ({
 			chatHistory: trimChatHistory([...state.chatHistory, chatMessage], MAX_CHAT_HISTORY_LEN),
 		}));
 	};
 
 	addChatHistory = (chatHistory: IChatMessage[]): void => {
-		console.log('addChatHistory: ', chatHistory);
 		this.setState(state => ({
 			chatHistory: [...state.chatHistory, ...chatHistory],
 		}));
@@ -108,7 +105,6 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 			console.log(errorMessage);
 		} else {
 			this.setState({ chatrooms });
-			console.log(this.state.chatrooms);
 		}
 	};
 
@@ -117,7 +113,6 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 			console.log(errorMessage);
 		} else {
 			this.setState({ chatroomName, chatHistory: [] });
-			console.log('handleLeaveChatroomComplete');
 		}
 	};
 

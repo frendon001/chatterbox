@@ -15,7 +15,6 @@ export const handleConnection = ({ client, clientId }: { client: WebSocket; clie
 		handleLeave,
 		handleMessage,
 		handleGetChatrooms,
-		isUserAvailable,
 		handleDisconnect,
 	} = makeHandlers(clientId, client, clientManager, chatroomManager);
 
@@ -33,8 +32,6 @@ export const handleConnection = ({ client, clientId }: { client: WebSocket; clie
 	client.on('chatMessage', handleMessage);
 
 	client.on('getChatrooms', handleGetChatrooms);
-
-	client.on('isUserAvailable', isUserAvailable);
 
 	client.on('disconnect', function () {
 		console.log('client disconnect...', clientId);
