@@ -1,3 +1,8 @@
+export interface IMessage<T> {
+	chatroomName: string;
+	data: T;
+	event: string;
+}
 export interface IChatroomMessage {
 	username: string;
 	message: string;

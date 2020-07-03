@@ -4,25 +4,20 @@ import ChatInput from './ChatInput';
 import ChatHistory from './ChatHistory';
 import ChatHeader from './ChatHeader';
 import { clientSocket, IClientSocket } from '../../client-socket';
-import { IChatroomDetails, IGetChatrooms, ILeaveJoinChatroom, IRegisterChatroom } from '../../interfaces';
+import {
+	IChatroomDetails,
+	IGetChatrooms,
+	ILeaveJoinChatroom,
+	IRegisterChatroom,
+	IChatroomMessage,
+} from '../../interfaces';
 import { trimChatHistory } from '../../utils';
 
 interface IChatState {
 	chatroomName: string;
-	chatHistory: IChatMessage[];
+	chatHistory: IChatroomMessage[];
 	username: string;
 	chatrooms: IChatroomDetails[];
-}
-
-export interface IChatMessage {
-	username: string;
-	message: string;
-}
-
-export interface IMessage<T> {
-	chatroomName: string;
-	data: T;
-	event: string;
 }
 
 const MAX_CHAT_HISTORY_LEN = 600;
@@ -57,13 +52,13 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 		this.ws.disconnect(this.state.username, this.state.chatroomName);
 	};
 
-	addMessage = (chatMessage: IChatMessage): void => {
+	addMessage = (chatMessage: IChatroomMessage): void => {
 		this.setState(state => ({
 			chatHistory: trimChatHistory([...state.chatHistory, chatMessage], MAX_CHAT_HISTORY_LEN),
 		}));
 	};
 
-	addChatHistory = (chatHistory: IChatMessage[]): void => {
+	addChatHistory = (chatHistory: IChatroomMessage[]): void => {
 		this.setState(state => ({
 			chatHistory: [...state.chatHistory, ...chatHistory],
 		}));

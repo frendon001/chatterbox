@@ -1,10 +1,10 @@
 import config from '../config';
-import { IMessage, IChatMessage } from '../components/Chat';
+import { IMessage, IChatroomMessage } from '../interfaces';
 
 const URL = `ws://${config.WEBSOCKET_HOST}/chat`;
 
 export interface IClientSocket {
-	init: (addMessage: (message: IChatMessage) => void) => void;
+	init: (addMessage: (message: IChatroomMessage) => void) => void;
 	handleEvent: (eventName: string, callback: any) => void;
 	dispatch: (event_name: string, message: any) => void;
 	sendMessage: <T>(message: IMessage<T>) => void;
@@ -19,7 +19,7 @@ export const clientSocket = (): IClientSocket => {
 	let ws: WebSocket | null = null;
 	const callbacks: { [key: string]: ((message: any) => void)[] } = {};
 
-	const init = (addMessage: (message: IChatMessage) => void) => {
+	const init = (addMessage: (message: IChatroomMessage) => void) => {
 		if (ws) {
 			ws.onerror = ws.onopen = ws.onclose = null;
 			ws.close();

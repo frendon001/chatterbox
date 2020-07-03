@@ -1,14 +1,9 @@
-import { IMessage, IChatMessage } from '../../components/Chat';
+import { IMessage, IChatroomMessage } from '../../interfaces';
 import WebSocket from 'ws';
 import { trimChatHistory } from '../../utils';
 
-export interface IChatroomMessage {
-	username: string;
-	message: string;
-}
-
 export interface IChatroom {
-	broadcastMessage: (message: IMessage<IChatMessage>) => void;
+	broadcastMessage: (message: IMessage<IChatroomMessage>) => void;
 	addEntry: (entry: IChatroomMessage) => void;
 	getChatHistory: () => IChatroomMessage[];
 	addUser: (clientId: string, client: WebSocket) => void;
@@ -31,7 +26,7 @@ const Chatroom = ({ name, color }: IChatroomInput): IChatroom => {
 	const members: Map<string, WebSocket> = new Map();
 	let chatHistory: IChatroomMessage[] = [];
 
-	function broadcastMessage(message: IMessage<IChatMessage>) {
+	function broadcastMessage(message: IMessage<IChatroomMessage>) {
 		members.forEach(m => m.send(JSON.stringify(message)));
 	}
 

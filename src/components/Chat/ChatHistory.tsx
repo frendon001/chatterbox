@@ -1,8 +1,8 @@
 import React from 'react';
 import ChatMessage from './ChatMessage';
-import { IChatMessage } from './Chat';
+import { IChatroomMessage } from '../../interfaces';
 
-const ChatHistory = ({ chatHistory }: { chatHistory: IChatMessage[] }): JSX.Element => {
+const ChatHistory = ({ chatHistory }: { chatHistory: IChatroomMessage[] }): JSX.Element => {
 	return (
 		<>
 			{chatHistory.map((chatMessage, index) => (

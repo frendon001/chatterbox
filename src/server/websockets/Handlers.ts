@@ -1,9 +1,15 @@
 import WebSocket from 'ws';
 import { IChatroomManager } from './chatroomManager';
 import { IClientManager } from './ClientManager';
-import { IChatroom, IChatroomMessage } from './Chatroom';
-import { IMessage, IChatMessage } from '../../components/Chat';
-import { ISocketMessage, IGetChatrooms, ILeaveChatMessage, ILeaveJoinChatroom } from '../../interfaces';
+import { IChatroom } from './Chatroom';
+import {
+	ISocketMessage,
+	IGetChatrooms,
+	ILeaveChatMessage,
+	ILeaveJoinChatroom,
+	IChatroomMessage,
+	IMessage,
+} from '../../interfaces';
 
 interface IEnsureValidChatroomAndUserSelected {
 	chatroom: IChatroom;
@@ -76,7 +82,7 @@ const makeHandlers = (
 		const {
 			chatroomName,
 			data: { username },
-		}: IMessage<IChatMessage> = JSON.parse(dataString);
+		}: IMessage<IChatroomMessage> = JSON.parse(dataString);
 		const registerResult = {
 			chatroomName,
 			event: 'registerUser',
@@ -94,7 +100,7 @@ const makeHandlers = (
 		const {
 			chatroomName,
 			data: { username },
-		}: IMessage<IChatMessage> = JSON.parse(dataString);
+		}: IMessage<IChatroomMessage> = JSON.parse(dataString);
 		const createEntry = () => ({
 			username,
 			message: `joined ${chatroomName}`,
@@ -143,7 +149,6 @@ const makeHandlers = (
 			.then(function (chatroom) {
 				// remove member from chatroom
 				chatroom.removeUser(clientId);
-				console.log(JSON.stringify(leaveChatroomResult));
 				client.send(JSON.stringify(leaveChatroomResult));
 			})
 			.catch(err => {
@@ -154,7 +159,7 @@ const makeHandlers = (
 	};
 
 	const handleMessage = (dataString: string) => {
-		const { chatroomName, data: messageData }: IMessage<IChatMessage> = JSON.parse(dataString);
+		const { chatroomName, data: messageData }: IMessage<IChatroomMessage> = JSON.parse(dataString);
 		const createEntry = () => ({ ...messageData });
 
 		handleEvent(chatroomName, createEntry)
