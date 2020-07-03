@@ -8,7 +8,7 @@ module.exports = merge(common, {
 	plugins: [
 		new HtmlWebpackPlugin({
 			filename: 'generated.html',
-			title: '[APP NAME]',
+			title: 'chatterbox',
 			meta: [
 				// viewport meta tag for responsiveness / media queries
 				{

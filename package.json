@@ -1,7 +1,7 @@
 {
-	"name": "react-typescript-fullstack-starter",
+	"name": "chatterbox",
 	"version": "1.0.0",
-	"description": "A starter template for a Full-Stack application with react, typescript, webpack, and babel",
+	"description": "A simple chat application implemented with web-sockets",
 	"main": "build/server/index.js",
 	"scripts": {
 		"start": "NODE_ENV=production node build/server/index.js",
@@ -16,25 +16,27 @@
 		"check-types": "tsc",
 		"validate": "npm-run-all --parallel check-types check-format lint",
 		"build:client": "webpack --config webpack.prod.js",
-		"build:server": "babel src --extensions .js,.ts,.tsx --out-dir build",
+		"build:server": "babel src --extensions .js,.ts,.tsx --out-dir build --source-maps",
 		"build": "npm run build:server && npm run build:client",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"clean": "rimraf build"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/frendon001/react-typescript-fullstack-starter.git"
+		"url": "git+https://github.com/frendon001/chatterbox.git"
 	},
 	"author": "Fausto Rendon",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/frendon001/react-typescript-fullstack-starter/issues"
+		"url": "https://github.com/frendon001/chatterbox/issues"
 	},
-	"homepage": "https://github.com/frendon001/react-typescript-fullstack-starter#readme",
+	"homepage": "https://github.com/frendon001/chatterbox#readme",
 	"dependencies": {
 		"@types/express": "^4.17.6",
 		"@types/helmet": "0.0.47",
 		"@types/react-router-dom": "^5.1.5",
+		"@types/uuid": "^8.0.0",
+		"@types/ws": "^7.2.4",
 		"axios": "^0.19.2",
 		"body-parser": "^1.19.0",
 		"concurrently": "^5.2.0",
@@ -45,7 +47,9 @@
 		"react": "^16.13.1",
 		"react-dom": "^16.13.1",
 		"react-hot-loader": "^4.12.21",
-		"react-router-dom": "^5.2.0"
+		"react-router-dom": "^5.2.0",
+		"uuid": "^8.1.0",
+		"ws": "^7.3.0"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.10.1",
