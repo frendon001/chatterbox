@@ -45,7 +45,18 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 		this.ws.handleEvent('registerUser', this.handleUserRegistration);
 		this.ws.handleEvent('getChatrooms', this.handleGetChatrooms);
 		this.ws.handleEvent('leaveChatroom', this.handleLeaveChatroom);
+		window.addEventListener('beforeunload', this.componentCleanup);
 	}
+
+	componentWillUnmount(): void {
+		this.componentCleanup();
+		window.removeEventListener('beforeunload', this.componentCleanup);
+	}
+
+	componentCleanup = (): void => {
+		console.log('unmounting...');
+		this.ws.disconnect(this.state.username, this.state.chatroomName);
+	};
 
 	addMessage = (chatMessage: IChatMessage): void => {
 		console.log('addMessage: ', chatMessage);

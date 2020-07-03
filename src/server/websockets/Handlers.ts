@@ -175,7 +175,6 @@ const makeHandlers = (
 		} catch (err) {
 			getChatroomResult.data.errorMessage = 'Unable to retrieve available chatrooms.';
 		}
-		console.log(JSON.stringify(getChatroomResult));
 		client.send(JSON.stringify(getChatroomResult));
 	};
 
@@ -184,10 +183,10 @@ const makeHandlers = (
 	};
 
 	const handleDisconnect = () => {
-		// remove user profile
-		clientManager.removeClient(clientId);
 		// remove member from all chatrooms
 		chatroomManager.removeClient(clientId);
+		// remove user profile
+		clientManager.removeClient(clientId);
 	};
 
 	const handleMessageRouting = (client: WebSocket) => (dataString: string) => {
@@ -208,6 +207,9 @@ const makeHandlers = (
 				break;
 			case 'leaveChatroom':
 				client.emit('leave', dataString);
+				break;
+			case 'disconnect':
+				client.emit('disconnect', dataString);
 				break;
 			default:
 				console.log(`Unmatched message event: ${event}`);

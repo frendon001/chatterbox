@@ -12,6 +12,7 @@ export interface IClientSocket {
 	joinChatroom: (inputUsername: string, chatroomName: string) => void;
 	getChatrooms: () => void;
 	leaveChatroom: (username: string, chatroomName: string) => void;
+	disconnect: (username: string, chatroomName: string) => void;
 }
 
 export const clientSocket = (): IClientSocket => {
@@ -115,6 +116,15 @@ export const clientSocket = (): IClientSocket => {
 		});
 	};
 
+	const disconnect = (username: string, chatroomName: string): void => {
+		sendMessage({
+			chatroomName: '',
+			event: 'disconnect',
+			data: { username, chatroomName },
+		});
+		ws?.close();
+	};
+
 	return {
 		init,
 		handleEvent,
@@ -124,5 +134,6 @@ export const clientSocket = (): IClientSocket => {
 		joinChatroom,
 		getChatrooms,
 		leaveChatroom,
+		disconnect,
 	};
 };

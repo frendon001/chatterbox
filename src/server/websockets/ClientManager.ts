@@ -17,7 +17,6 @@ const ClientManager = (): IClientManager => {
 	};
 
 	const registerClient = (clientId: string, client: WebSocket, username: string) => {
-		console.log(clientId, username);
 		clients.set(clientId, { client, username });
 	};
 
