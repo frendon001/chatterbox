@@ -18,7 +18,8 @@ const chatHeaderTextStyle: CSSProperties = {
 const chatHeaderButtonStyle: CSSProperties = {
 	flex: 'initial',
 	padding: '0',
-	height: '28px',
+	height: '24px',
+	borderRadius: '2px',
 };
 
 const ChatHeader = ({ selectedChatroom, username, onLeaveChatroom }: IChatHeader): JSX.Element => {
@@ -37,6 +38,7 @@ const ChatHeader = ({ selectedChatroom, username, onLeaveChatroom }: IChatHeader
 					e.preventDefault();
 					onLeaveChatroom(username, selectedChatroom.name);
 				}}
+				className="button-close"
 				style={chatHeaderButtonStyle}
 			>
 				<i className="material-icons">close</i>

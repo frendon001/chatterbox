@@ -26,8 +26,19 @@
 	margin-top: 50px;
 }
 
+.button-close {
+	color: #e8eaf6;
+	border-color: #b3b3b3;
+	border-style: none;
+	background-color: #7e57c2;
+}
+
 button:focus {
 	outline: none;
-	background-color: #7e57c2;
+	background-color: #9575cd;
 	color: #e8eaf6;
+}
+
+textarea:focus {
+	outline-color: #7e57c2 !important;
 }

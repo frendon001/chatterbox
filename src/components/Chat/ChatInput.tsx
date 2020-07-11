@@ -20,7 +20,7 @@ const chatInputFormStyle: CSSProperties = {
 
 const chatTextAreaStyle: CSSProperties = {
 	// minHeight: '25px',
-	width: '80%',
+	width: '70%',
 	height: '75px',
 	maxHeight: '75px',
 	borderRadius: '5px',
