@@ -1,0 +1,33 @@
+/* label focus color */
+.input-field input[type='text']:focus + label {
+	color: #7e57c2 !important;
+}
+/* label underline focus color */
+.input-field input[type='text']:focus {
+	border-bottom: 1px solid #7e57c2 !important;
+	box-shadow: 0 1px 0 0 #7e57c2 !important;
+}
+
+.dropdown-content li > a,
+.dropdown-content li > span {
+	color: #7e57c2;
+}
+
+.btn:hover,
+.btn-large:hover,
+.btn-small:hover {
+	background-color: #9575cd !important;
+}
+
+.margin-top {
+	margin-top: 150px;
+}
+.margin-top-50 {
+	margin-top: 50px;
+}
+
+button:focus {
+	outline: none;
+	background-color: #7e57c2;
+	color: #e8eaf6;
+}
