@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import SelectChatroom from './SelectChatroom';
 import Chatroom from './Chatroom';
-// import ChatInput from './ChatInput';
-// import ChatHistory from './ChatHistory';
-// import ChatHeader from './ChatHeader';
 import { clientSocket, IClientSocket } from '../../client-socket';
 import {
 	IChatroomDetails,

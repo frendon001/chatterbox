@@ -11,7 +11,6 @@ interface IChatInputProps {
 const chatInputFormStyle: CSSProperties = {
 	display: 'flex',
 	flexDirection: 'row',
-	// resize: 'vertical',
 	overflow: 'auto',
 	alignItems: 'center',
 	justifyContent: 'space-around',
@@ -19,16 +18,13 @@ const chatInputFormStyle: CSSProperties = {
 };
 
 const chatTextAreaStyle: CSSProperties = {
-	// minHeight: '25px',
 	width: '70%',
 	height: '75px',
 	maxHeight: '75px',
 	borderRadius: '5px',
 	padding: '5px .75rem',
-	// overflow: 'hidden',
 	resize: 'none',
 	border: 'none',
-	// borderColor: '#ffff',
 };
 
 const chatButtonStyle: CSSProperties = {
@@ -75,7 +71,6 @@ class ChatInput extends Component<IChatInputProps, IChatInputState> {
 						onChange={e => this.setState({ message: e.target.value })}
 						style={chatTextAreaStyle}
 					/>
-					{/* <input type="submit" value={'Send'} /> */}
 					<button className="waves-effect" style={chatButtonStyle} type="submit" name="action">
 						SUBMIT
 						<i

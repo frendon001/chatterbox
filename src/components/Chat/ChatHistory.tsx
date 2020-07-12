@@ -16,8 +16,6 @@ const chatHeaderStyle: CSSProperties = {
 	overflowY: 'auto',
 	display: 'flex',
 	flexDirection: 'column',
-	// overflow: 'auto',
-	// backgroundColor: selectedChatroom.color,
 };
 
 const ChatHistory = ({ chatHistory, self, selectedChatroom }: IChatHistory): JSX.Element => {
