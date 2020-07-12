@@ -4,7 +4,7 @@ export default {
 	CHATROOMS: [
 		{
 			name: 'Aegian',
-			color: '#517ca3',
+			color: '#a3ccf1',
 		},
 		{
 			name: 'Alabaster',
@@ -12,11 +12,11 @@ export default {
 		},
 		{
 			name: 'Cerulian',
-			color: '#0691c2',
+			color: '#5fccf3',
 		},
 		{
 			name: 'Cloud',
-			color: '#bebec7',
+			color: '#e6e6e6',
 		},
 		{
 			name: 'Daffodil',
@@ -24,23 +24,23 @@ export default {
 		},
 		{
 			name: 'Flamingo',
-			color: '#fda4b8',
+			color: '#ffc8d5',
 		},
 		{
-			name: 'Periwinkle',
-			color: '#9865c5',
+			name: 'Sky',
+			color: '#81bdda',
 		},
 		{
 			name: 'Pistachio',
-			color: '#2d3c2',
+			color: '#b0d896',
 		},
 		{
 			name: 'Ruby',
-			color: '#bc5449',
+			color: '#f96b6b',
 		},
 		{
 			name: 'Tiger',
-			color: '#ffb38b',
+			color: '#ffb37c',
 		},
 	],
 };

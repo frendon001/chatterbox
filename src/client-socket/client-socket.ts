@@ -33,10 +33,6 @@ export const clientSocket = (): IClientSocket => {
 			console.log('WebSocket error');
 		};
 		ws.onopen = () => {
-			addMessage({
-				username: '',
-				message: 'WebSocket connection established',
-			});
 			console.log('WebSocket connection established');
 			getChatrooms();
 		};

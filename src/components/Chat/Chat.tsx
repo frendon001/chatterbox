@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import SelectChatroom from './SelectChatroom';
-import ChatInput from './ChatInput';
-import ChatHistory from './ChatHistory';
-import ChatHeader from './ChatHeader';
+import Chatroom from './Chatroom';
 import { clientSocket, IClientSocket } from '../../client-socket';
 import {
 	IChatroomDetails,
@@ -18,6 +16,7 @@ interface IChatState {
 	chatHistory: IChatroomMessage[];
 	username: string;
 	chatrooms: IChatroomDetails[];
+	selectedChatroom: IChatroomDetails | null;
 }
 
 const MAX_CHAT_HISTORY_LEN = 600;
@@ -28,6 +27,7 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 		chatHistory: [],
 		chatroomName: '',
 		chatrooms: [],
+		selectedChatroom: null,
 	};
 
 	ws: IClientSocket = clientSocket();
@@ -91,7 +91,13 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 		if (errorMessage) {
 			console.log(errorMessage);
 		} else {
-			this.setState({ chatroomName });
+			let selectedChatroom: IChatroomDetails | null = null;
+			for (const room of this.state.chatrooms) {
+				if (room.name === chatroomName) {
+					selectedChatroom = { ...room };
+				}
+			}
+			this.setState({ chatroomName, selectedChatroom });
 		}
 	};
 
@@ -107,7 +113,7 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 		if (errorMessage) {
 			console.log(errorMessage);
 		} else {
-			this.setState({ chatroomName, chatHistory: [] });
+			this.setState({ chatroomName, chatHistory: [], selectedChatroom: null });
 		}
 	};
 
@@ -127,26 +133,38 @@ class Chat extends Component<Record<string, unknown>, IChatState> {
 				/>
 			);
 		} else {
-			return <p>Loading available chatrooms...</p>;
+			return (
+				<div className="center margin-top">
+					<div className="preloader-wrapper big active">
+						<div className="spinner-layer spinner-blue-only">
+							<div className="circle-clipper left">
+								<div className="circle"></div>
+							</div>
+							<div className="gap-patch">
+								<div className="circle"></div>
+							</div>
+							<div className="circle-clipper right">
+								<div className="circle"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			);
 		}
 	};
 
 	render(): JSX.Element {
 		return (
 			<div>
-				{this.state.chatroomName ? (
-					<>
-						<ChatHeader
-							username={this.state.username}
-							chatroomName={this.state.chatroomName}
-							onLeaveChatroom={this.ws.leaveChatroom}
-						/>
-						<ChatHistory chatHistory={this.state.chatHistory} />
-						<ChatInput onSubmitChatMessage={messageString => this.submitMessage(messageString)} />
-					</>
-				) : (
-					this.showChatroomSelection()
-				)}
+				<Chatroom
+					username={this.state.username}
+					chatroomName={this.state.chatroomName}
+					onLeaveChatroom={this.ws.leaveChatroom}
+					chatHistory={this.state.chatHistory}
+					onSubmitChatMessage={this.submitMessage}
+					selectedChatroom={this.state.selectedChatroom}
+				/>
+				{!this.state.chatroomName && this.showChatroomSelection()}
 			</div>
 		);
 	}
