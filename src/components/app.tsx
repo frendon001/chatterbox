@@ -1,5 +1,5 @@
+import { hot } from 'react-hot-loader/root';
 import React from 'react';
-import { hot } from 'react-hot-loader';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { ChatterboxContainer } from './Chatterbox';
 
@@ -13,4 +13,4 @@ const App: React.FunctionComponent = () => {
 	);
 };
 
-export default hot(module)(App);
+export default hot(App);

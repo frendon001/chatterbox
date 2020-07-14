@@ -1,3 +1,4 @@
+import 'react-hot-loader';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
@@ -7,13 +8,6 @@ import 'materialize-css';
 import 'material-design-icons/iconfont/material-icons.css';
 import '../public/custom-css.css';
 
-ReactDOM.render(
-	<BrowserRouter>
-		<App />
-	</BrowserRouter>,
-	document.getElementById('root'),
-);
-
 // Hot module replacement logic to accept updates from webpack-dev-server
 if (process.env.NODE_ENV === 'development' && module.hot) {
 	module.hot.accept();
@@ -22,3 +16,10 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
 	//     store.replaceReducer(require('../reducers').default);
 	//   });
 }
+
+ReactDOM.render(
+	<BrowserRouter>
+		<App />
+	</BrowserRouter>,
+	document.getElementById('root'),
+);
