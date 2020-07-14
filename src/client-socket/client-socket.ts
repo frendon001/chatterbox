@@ -1,7 +1,7 @@
 import config from '../config';
 import { IMessage, IChatroomMessage } from '../interfaces';
 
-const URL = `ws://${config.WEBSOCKET_HOST}/chat`;
+const URL = `ws://${config.WEBSOCKET_HOST === 'production' ? window.location.host : config.WEBSOCKET_HOST}/chat`;
 
 export interface IClientSocket {
 	init: (addMessage: (message: IChatroomMessage) => void) => void;
