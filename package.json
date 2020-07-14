@@ -3,6 +3,10 @@
 	"version": "1.0.0",
 	"description": "A simple chat application implemented with web-sockets",
 	"main": "build/server/index.js",
+	"engines": {
+		"node": "12.x",
+		"npm": "6.x"
+	},
 	"scripts": {
 		"start": "NODE_ENV=production node build/server/index.js",
 		"server": "npm run validate && npm run build:server && nodemon build/index.js",
