@@ -1,7 +1,7 @@
 import { hot } from 'react-hot-loader/root';
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { ChatterboxContainer } from './Chatterbox';
+import { ChatterboxContainer } from '../Chatterbox';
 
 const App: React.FunctionComponent = () => {
 	return (
