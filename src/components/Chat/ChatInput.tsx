@@ -17,29 +17,30 @@ const chatInputFormStyle: CSSProperties = {
 	padding: '0 .75rem',
 };
 
-const chatTextAreaStyle: CSSProperties = {
-	width: '70%',
-	height: '75px',
-	maxHeight: '75px',
-	borderRadius: '5px',
-	padding: '5px .75rem',
-	resize: 'none',
-	border: 'none',
-};
+// const chatTextAreaStyle: CSSProperties = {
+// 	width: '65%',
+// 	height: '75px',
+// 	maxHeight: '75px',
+// 	borderRadius: '5px',
+// 	padding: '0.75rem 0.5rem',
+// 	resize: 'none',
+// 	border: 'none',
+// 	color: '#394142',
+// };
 
-const chatButtonStyle: CSSProperties = {
-	textDecoration: 'none',
-	color: '#fff',
-	textAlign: 'center',
-	letterSpacing: '.5px',
-	backgroundColor: '#7e57c2',
-	fontSize: '14px',
-	outline: '0',
-	border: 'none',
-	borderRadius: '2px',
-	height: '36px',
-	lineHeight: '25px',
-};
+// const chatButtonStyle: CSSProperties = {
+// 	textDecoration: 'none',
+// 	color: '#fff',
+// 	textAlign: 'center',
+// 	letterSpacing: '.5px',
+// 	backgroundColor: '#7e57c2',
+// 	fontSize: '14px',
+// 	outline: '0',
+// 	border: 'none',
+// 	borderRadius: '2px',
+// 	height: '50px',
+// 	lineHeight: '25px',
+// };
 
 class ChatInput extends Component<IChatInputProps, IChatInputState> {
 	constructor(props: IChatInputProps) {
@@ -69,9 +70,10 @@ class ChatInput extends Component<IChatInputProps, IChatInputState> {
 						placeholder={'Enter your message...'}
 						value={this.state.message}
 						onChange={e => this.setState({ message: e.target.value })}
-						style={chatTextAreaStyle}
+						// style={chatTextAreaStyle}
+						className="chat-text-area"
 					/>
-					<button className="waves-effect" style={chatButtonStyle} type="submit" name="action">
+					<button className="waves-effect chat-input-button" type="submit" name="action">
 						SUBMIT
 						<i
 							className="material-icons right"
