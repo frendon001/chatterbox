@@ -72,12 +72,13 @@ class SelectChatroom extends Component<ISelectChatroomProps, ISelectChatroomStat
 						</div>
 					)}
 					<div className="row">
-						<div className="browser-default col s11">
+						<div className="col s11">
 							<label>Select a chatroom</label>
 							<select
 								name="chatroom"
 								value={this.state.chatroom}
 								onChange={event => this.setState({ chatroom: event.target.value })}
+								className="browser-default"
 							>
 								<option value="" disabled>
 									Select a chatroom
