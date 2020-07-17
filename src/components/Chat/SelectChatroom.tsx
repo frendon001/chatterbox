@@ -46,7 +46,7 @@ class SelectChatroom extends Component<ISelectChatroomProps, ISelectChatroomStat
 
 	render(): JSX.Element {
 		return (
-			<div className="row center">
+			<div className="row">
 				<form
 					action="."
 					onSubmit={e => {
@@ -72,7 +72,8 @@ class SelectChatroom extends Component<ISelectChatroomProps, ISelectChatroomStat
 						</div>
 					)}
 					<div className="row">
-						<div className="input-field col s11">
+						<div className="browser-default col s11">
+							<label>Select a chatroom</label>
 							<select
 								name="chatroom"
 								value={this.state.chatroom}
@@ -81,7 +82,7 @@ class SelectChatroom extends Component<ISelectChatroomProps, ISelectChatroomStat
 								<option value="" disabled>
 									Select a chatroom
 								</option>
-								,{this.generateChatroomList()}
+								{this.generateChatroomList()}
 							</select>
 						</div>
 					</div>
