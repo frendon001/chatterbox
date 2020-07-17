@@ -5,6 +5,7 @@ const headerStyle: CSSProperties = {
 	color: '#e8eaf6',
 	margin: '0',
 	textShadow: '-1px 0 #22242638, 0 1px #22242638, 1px 0 #22242638, 0 -1px #22242638',
+	display: 'flex',
 };
 
 const appStyle: CSSProperties = {

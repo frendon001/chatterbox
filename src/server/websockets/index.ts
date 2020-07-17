@@ -23,7 +23,6 @@ const initWebSocket = (server: http.Server): void => {
 		}
 	});
 	// Apply logic on websocket connection
-
 	wss.on('connection', handleConnection);
 };
 
