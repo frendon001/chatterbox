@@ -48,7 +48,7 @@ class ChatInput extends Component<IChatInputProps, IChatInputState> {
 						className="chat-text-area"
 					/>
 					<button className="waves-effect chat-input-button" type="submit" name="action">
-						SUBMIT
+						SEND
 						<i
 							className="material-icons right"
 							style={{ marginLeft: '5px', fontSize: '20px', lineHeight: '1.3' }}

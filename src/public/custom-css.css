@@ -43,6 +43,17 @@ textarea:focus {
 	outline-color: #7e57c2 !important;
 }
 
+select:focus {
+	outline: none;
+	border-bottom: 1px solid #9575cd;
+}
+
+select {
+	background-color: transparent;
+	border: none;
+	border-bottom: 1px solid #9e9e9e;
+}
+
 .chat-text-area {
 	width: 70%;
 	height: 75px;
@@ -52,6 +63,7 @@ textarea:focus {
 	resize: none;
 	border: none;
 	color: #394142;
+	font-size: 1.2rem;
 }
 .chat-input-button {
 	text-decoration: none;

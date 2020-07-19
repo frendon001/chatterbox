@@ -80,8 +80,8 @@ class SelectChatroom extends Component<ISelectChatroomProps, ISelectChatroomStat
 								onChange={event => this.setState({ chatroom: event.target.value })}
 								className="browser-default"
 							>
-								<option value="" disabled>
-									Select a chatroom
+								<option value="" disabled style={{ color: '#9e9e9e' }}>
+									-- none selected --
 								</option>
 								{this.generateChatroomList()}
 							</select>
