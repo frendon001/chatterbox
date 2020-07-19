@@ -30,7 +30,8 @@ const ClientManager = (): IClientManager => {
 				.filter(c => c.username)
 				.map(c => c.username),
 		);
-		return !usersTaken.has(username);
+		const isUsernameAllowed = '_system_' !== username;
+		return !usersTaken.has(username) && isUsernameAllowed;
 	};
 
 	const getUserByClientId = (clientId: string) => {

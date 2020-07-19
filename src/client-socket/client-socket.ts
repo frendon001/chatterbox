@@ -30,7 +30,7 @@ export const clientSocket = (): IClientSocket => {
 		ws.onerror = () => {
 			addMessage({
 				message: 'WebSocket error',
-				username: '',
+				username: config.SYSTEM_NAME,
 			});
 			console.log('WebSocket error');
 		};
@@ -40,7 +40,7 @@ export const clientSocket = (): IClientSocket => {
 		};
 		ws.onclose = () => {
 			addMessage({
-				username: '',
+				username: config.SYSTEM_NAME,
 				message: 'WebSocket connection closed',
 			});
 			console.log('WebSocket connection closed');

@@ -43,10 +43,12 @@ const CHATROOMS = [
 		color: '#ffb37c',
 	},
 ];
+const SYSTEM_NAME = '_system_';
 
 export default {
 	PORT_SERVER,
 	HOST,
 	ENVIRONMENT,
 	CHATROOMS,
+	SYSTEM_NAME,
 };

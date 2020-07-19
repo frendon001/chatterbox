@@ -21,6 +21,8 @@ const chatHeaderStyle: CSSProperties = {
 const chatHistoryContainerStyle: CSSProperties = {
 	overflowY: 'auto',
 	padding: '.5rem .75rem 0 .75rem',
+	display: 'flex',
+	flexDirection: 'column',
 };
 
 const ChatHistory = ({ chatHistory, self, selectedChatroom }: IChatHistory): JSX.Element => {
