@@ -16,6 +16,7 @@ interface IChatroom {
 const chatroomStyle: CSSProperties = {
 	// padding: '.75rem',
 	borderRadius: '1rem 1rem 1rem 1rem',
+	marginBottom: '2.5rem',
 };
 
 const Chatroom = ({
