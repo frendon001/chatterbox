@@ -1,8 +1,8 @@
 import config from '../config';
 import { IMessage, IChatroomMessage } from '../interfaces';
-
-const URL = `${config.WEBSOCKET_HOST === 'production' ? 'wss' : 'ws'}://${
-	config.WEBSOCKET_HOST === 'production' ? window.location.host : config.WEBSOCKET_HOST
+const HOST = window.location.host;
+const URL = `${config.ENVIRONMENT ? 'wss' : 'ws'}://${
+	config.ENVIRONMENT ? HOST : `${HOST.split(':')[0]}:${config.PORT_SERVER}`
 }/chat`;
 
 export interface IClientSocket {
