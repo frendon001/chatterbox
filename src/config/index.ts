@@ -1,4 +1,5 @@
 const PORT_SERVER = Number(process.env.PORT) || 3030;
+const HOST = process.env.HOST_NAME || '0.0.0.0';
 const ENVIRONMENT = process.env.NODE_ENV === 'production' ? true : false;
 const CHATROOMS = [
 	{
