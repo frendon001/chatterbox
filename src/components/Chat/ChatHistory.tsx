@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, useEffect, useRef } from 'react';
 import ChatMessage from './ChatMessage';
 import { IChatroomMessage, IChatroomDetails } from '../../interfaces';
 
@@ -26,6 +26,13 @@ const chatHistoryContainerStyle: CSSProperties = {
 };
 
 const ChatHistory = ({ chatHistory, self, selectedChatroom }: IChatHistory): JSX.Element => {
+	const messagesEndRef = useRef<HTMLDivElement>(null);
+	const scrollToBottom = () => {
+		if (messagesEndRef?.current) {
+			messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+		}
+	};
+	useEffect(scrollToBottom, [chatHistory]);
 	return (
 		<div style={chatHeaderStyle}>
 			<div style={chatHistoryContainerStyle}>
@@ -38,6 +45,7 @@ const ChatHistory = ({ chatHistory, self, selectedChatroom }: IChatHistory): JSX
 						selfColor={selectedChatroom.color}
 					/>
 				))}
+				<div ref={messagesEndRef} />
 			</div>
 		</div>
 	);
