@@ -1,8 +1,8 @@
 import config from '../config';
 import { IMessage, IChatroomMessage } from '../interfaces';
 const HOST = window.location.host;
-const URL = `${config.ENVIRONMENT ? 'wss' : 'ws'}://${
-	config.ENVIRONMENT ? HOST : `${HOST.split(':')[0]}:${config.PORT_SERVER}`
+const URL = `${config.IS_PROD ? 'wss' : 'ws'}://${
+	config.IS_PROD ? HOST : `${HOST.split(':')[0]}:${config.PORT_SERVER}`
 }/chat`;
 
 export interface IClientSocket {
@@ -30,7 +30,7 @@ export const clientSocket = (): IClientSocket => {
 		ws.onerror = () => {
 			addMessage({
 				message: 'WebSocket error',
-				username: '',
+				username: config.SYSTEM_NAME,
 			});
 			console.log('WebSocket error');
 		};
@@ -40,7 +40,7 @@ export const clientSocket = (): IClientSocket => {
 		};
 		ws.onclose = () => {
 			addMessage({
-				username: '',
+				username: config.SYSTEM_NAME,
 				message: 'WebSocket connection closed',
 			});
 			console.log('WebSocket connection closed');

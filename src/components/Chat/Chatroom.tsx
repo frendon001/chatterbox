@@ -10,13 +10,12 @@ interface IChatroom {
 	chatHistory: IChatroomMessage[];
 	selectedChatroom: IChatroomDetails | null;
 	onLeaveChatroom: (username: string, chatroomName: string) => void;
-	onSubmitChatMessage(message: string): void;
+	onSubmitChatMessage: (message: string) => void;
 }
 
 const chatroomStyle: CSSProperties = {
-	// padding: '.75rem',
 	borderRadius: '1rem 1rem 1rem 1rem',
-	marginBottom: '2.5rem',
+	marginBottom: '2rem',
 };
 
 const Chatroom = ({

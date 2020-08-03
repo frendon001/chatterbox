@@ -10,6 +10,7 @@ import {
 	IChatroomMessage,
 	IMessage,
 } from '../../interfaces';
+import config from '../../config';
 
 interface IEnsureValidChatroomAndUserSelected {
 	chatroom: IChatroom;
@@ -102,8 +103,8 @@ const makeHandlers = (
 			data: { username },
 		}: IMessage<IChatroomMessage> = JSON.parse(dataString);
 		const createEntry = () => ({
-			username,
-			message: `joined ${chatroomName}`,
+			username: config.SYSTEM_NAME,
+			message: `${username} joined ${chatroomName}`,
 		});
 		const joinedChatroomResult = {
 			chatroomName,
@@ -138,8 +139,8 @@ const makeHandlers = (
 			data: { chatroomName, username },
 		}: ISocketMessage<ILeaveChatMessage> = JSON.parse(dataString);
 		const createEntry = () => ({
-			username,
-			message: `left ${chatroomName}`,
+			username: config.SYSTEM_NAME,
+			message: `${username} left ${chatroomName}`,
 		});
 		const leaveChatroomResult: ISocketMessage<ILeaveJoinChatroom> = {
 			event: 'leaveChatroom',

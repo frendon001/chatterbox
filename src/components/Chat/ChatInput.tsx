@@ -2,6 +2,7 @@ import React, { Component, CSSProperties } from 'react';
 
 interface IChatInputState {
 	message: string;
+	isMobile: boolean;
 }
 
 interface IChatInputProps {
@@ -17,13 +18,31 @@ const chatInputFormStyle: CSSProperties = {
 	padding: '0 .75rem',
 };
 
+const isMobileRegex = /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i;
+const ENTER_KEY = 13;
 class ChatInput extends Component<IChatInputProps, IChatInputState> {
 	constructor(props: IChatInputProps) {
 		super(props);
 	}
 	state: Readonly<IChatInputState> = {
 		message: '',
+		isMobile: false,
 	};
+
+	mobileCheck = (): boolean => {
+		console.log('running check for device type...');
+		let check = false;
+		(function (a) {
+			if (isMobileRegex.test(a)) {
+				check = true;
+			}
+		})(navigator.userAgent || navigator.vendor);
+		return check;
+	};
+
+	componentDidMount(): void {
+		this.setState({ isMobile: this.mobileCheck() });
+	}
 
 	render(): JSX.Element {
 		return (
@@ -44,10 +63,18 @@ class ChatInput extends Component<IChatInputProps, IChatInputState> {
 						name="message"
 						placeholder={'Enter your message...'}
 						value={this.state.message}
-						onChange={e => this.setState({ message: e.target.value })}
+						onChange={e => {
+							this.setState({ message: e.target.value });
+						}}
+						onKeyDown={e => {
+							if (!this.state.isMobile && e.keyCode === ENTER_KEY && !e.shiftKey) {
+								this.props.onSubmitChatMessage(this.state.message);
+								this.setState({ message: '' });
+							}
+						}}
 						className="chat-text-area"
 					/>
-					<button className="waves-effect chat-input-button" type="submit" name="action">
+					<button className="waves-effect chat-input-button" type="submit" name="send">
 						SEND
 						<i
 							className="material-icons right"
