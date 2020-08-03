@@ -30,6 +30,6 @@ if (process.env.NODE_ENV === 'production') {
 // Create Http Server
 const server = http.createServer(app);
 initWebSocket(server);
-server.listen(config.PORT_SERVER, config.HOST);
+server.listen(config.PORT_SERVER);
 
 module.exports = server;

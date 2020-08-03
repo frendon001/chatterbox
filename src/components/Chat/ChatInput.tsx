@@ -68,6 +68,7 @@ class ChatInput extends Component<IChatInputProps, IChatInputState> {
 						}}
 						onKeyDown={e => {
 							if (!this.state.isMobile && e.keyCode === ENTER_KEY && !e.shiftKey) {
+								e.preventDefault();
 								this.props.onSubmitChatMessage(this.state.message);
 								this.setState({ message: '' });
 							}
