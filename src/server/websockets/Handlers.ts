@@ -9,6 +9,7 @@ import {
 	ILeaveJoinChatroom,
 	IChatroomMessage,
 	IMessage,
+	IPingPongMessage,
 } from '../../interfaces';
 import config from '../../config';
 
@@ -25,6 +26,7 @@ export interface IMakeHandlers {
 	handleMessage: (data: string) => void;
 	handleGetChatrooms: () => void;
 	handleDisconnect: () => void;
+	setHeartbeat: (dataString: string) => void;
 }
 
 const handleEventHelper = (clientId: string, clientManager: IClientManager, chatroomManager: IChatroomManager) => {
@@ -93,7 +95,7 @@ const makeHandlers = (
 			registerResult.data.errorMessage = `The selected username: ${username} is unavailable. `;
 		}
 
-		clientManager.registerClient(clientId, client, username);
+		clientManager.registerClient(clientId, client, username, clientManager.isAlive(clientId));
 		client.send(JSON.stringify(registerResult));
 	};
 
@@ -165,7 +167,7 @@ const makeHandlers = (
 
 		handleEvent(chatroomName, createEntry)
 			.then()
-			.catch(err => console.log(err));
+			.catch(err => console.log('handleMessageError:', err.message));
 	};
 
 	const handleGetChatrooms = () => {
@@ -209,9 +211,19 @@ const makeHandlers = (
 			case 'disconnect':
 				client.emit('disconnect', dataString);
 				break;
+			case 'pong':
+				client.emit('pong', dataString);
+				break;
 			default:
 				console.log(`Unmatched message event: ${event}`);
 		}
+	};
+	const setHeartbeat = (dataString: string) => {
+		const {
+			data: { username },
+		}: IMessage<IPingPongMessage> = JSON.parse(dataString);
+		const isAlive = true;
+		return clientManager.setHeartbeat(clientId, client, isAlive, username ? username : undefined);
 	};
 
 	return {
@@ -222,6 +234,7 @@ const makeHandlers = (
 		handleMessage,
 		handleGetChatrooms,
 		handleDisconnect,
+		setHeartbeat,
 	};
 };
 

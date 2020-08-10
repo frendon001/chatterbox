@@ -1,5 +1,5 @@
 import config from '../config';
-import { IMessage, IChatroomMessage } from '../interfaces';
+import { IMessage, IChatroomMessage, IPingPongMessage } from '../interfaces';
 const HOST = window.location.host;
 const URL = `${config.IS_PROD ? 'wss' : 'ws'}://${
 	config.IS_PROD ? HOST : `${HOST.split(':')[0]}:${config.PORT_SERVER}`
@@ -20,6 +20,7 @@ export interface IClientSocket {
 export const clientSocket = (): IClientSocket => {
 	let ws: WebSocket | null = null;
 	const callbacks: { [key: string]: ((message: any) => void)[] } = {};
+	let pingTimeout: NodeJS.Timeout;
 
 	const init = (addMessage: (message: IChatroomMessage) => void) => {
 		if (ws) {
@@ -37,20 +38,39 @@ export const clientSocket = (): IClientSocket => {
 		ws.onopen = () => {
 			console.log('WebSocket connection established');
 			getChatrooms();
+			heartbeat();
 		};
 		ws.onclose = () => {
 			addMessage({
 				username: config.SYSTEM_NAME,
 				message: 'WebSocket connection closed',
 			});
-			console.log('WebSocket connection closed');
+			clearTimeout(pingTimeout);
 			ws = null;
+			console.log('WebSocket connection closed');
 		};
 		ws.onmessage = evt => {
 			// on receiving a message, use dispatch method to handle event
 			const { event, data } = JSON.parse(evt.data);
 			dispatch(event, data);
 		};
+		handleEvent('ping', heartbeat);
+		handleEvent('ping', pong);
+	};
+
+	const heartbeat = () => {
+		clearTimeout(pingTimeout);
+		pingTimeout = setTimeout(() => {
+			ws?.close();
+		}, 30000 + 10000);
+	};
+
+	const pong = ({ username = '' }: IPingPongMessage): void => {
+		sendMessage({
+			chatroomName: '',
+			event: 'pong',
+			data: { username },
+		});
 	};
 
 	const sendMessage = <T>(message: IMessage<T>) => {

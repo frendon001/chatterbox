@@ -16,10 +16,13 @@ export const handleConnection = ({ client, clientId }: { client: WebSocket; clie
 		handleMessage,
 		handleGetChatrooms,
 		handleDisconnect,
+		setHeartbeat,
 	} = makeHandlers(clientId, client, clientManager, chatroomManager);
 
 	console.log('client connected...', clientId);
 	clientManager.addClient(clientId, client);
+
+	client.on('pong', setHeartbeat);
 
 	client.on('register', handleRegister);
 

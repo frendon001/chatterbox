@@ -30,7 +30,6 @@ class ChatInput extends Component<IChatInputProps, IChatInputState> {
 	};
 
 	mobileCheck = (): boolean => {
-		console.log('running check for device type...');
 		let check = false;
 		(function (a) {
 			if (isMobileRegex.test(a)) {
