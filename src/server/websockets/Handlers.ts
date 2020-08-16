@@ -20,12 +20,12 @@ interface IEnsureValidChatroomAndUserSelected {
 
 export interface IMakeHandlers {
 	handleMessageRouting: (client: WebSocket) => (dataString: string) => void;
-	handleRegister: (username: string) => void;
-	handleJoin: (chatroomName: string, username: string) => void;
-	handleLeave: (chatroomName: string, username: string) => void;
+	handleRegister: (data: string) => void;
+	handleJoin: (data: string) => void;
+	handleLeave: (data: string) => void;
 	handleMessage: (data: string) => void;
 	handleGetChatrooms: () => void;
-	handleDisconnect: () => void;
+	handleDisconnect: (data: string) => void;
 	setHeartbeat: (dataString: string) => void;
 }
 
@@ -183,11 +183,30 @@ const makeHandlers = (
 		client.send(JSON.stringify(getChatroomResult));
 	};
 
-	const handleDisconnect = () => {
-		// remove member from all chatrooms
-		chatroomManager.removeClient(clientId);
-		// remove user profile
-		clientManager.removeClient(clientId);
+	const handleDisconnect = (dataString: string) => {
+		console.log('client disconnect...', clientId);
+		const {
+			data: { chatroomName, username },
+		}: ISocketMessage<ILeaveChatMessage> = JSON.parse(dataString);
+		const createEntry = () => ({
+			username: config.SYSTEM_NAME,
+			message: `${username} left ${chatroomName}`,
+		});
+		handleEvent(chatroomName, createEntry)
+			.then(function (chatroom) {
+				// remove member from chatroom
+				chatroom.removeUser(clientId);
+				// remove member from all chatrooms
+				chatroomManager.removeClient(clientId);
+				// remove user profile
+				clientManager.removeClient(clientId);
+				// client.send(JSON.stringify(leaveChatroomResult));
+			})
+			.catch(() => {
+				// if chatroom not selected still need to remove user
+				// remove user profile
+				clientManager.removeClient(clientId);
+			});
 	};
 
 	const handleMessageRouting = (client: WebSocket) => (dataString: string) => {

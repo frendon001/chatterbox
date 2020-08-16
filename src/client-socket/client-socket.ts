@@ -41,10 +41,6 @@ export const clientSocket = (): IClientSocket => {
 			heartbeat();
 		};
 		ws.onclose = () => {
-			addMessage({
-				username: config.SYSTEM_NAME,
-				message: 'WebSocket connection closed',
-			});
 			clearTimeout(pingTimeout);
 			ws = null;
 			console.log('WebSocket connection closed');
