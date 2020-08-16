@@ -46,3 +46,7 @@ export interface IRegisterChatroom extends IBaseChatroomResponse {
 	chatroomName: string;
 	username: string;
 }
+
+export interface IPingPongMessage {
+	username?: string;
+}

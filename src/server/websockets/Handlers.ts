@@ -9,6 +9,7 @@ import {
 	ILeaveJoinChatroom,
 	IChatroomMessage,
 	IMessage,
+	IPingPongMessage,
 } from '../../interfaces';
 import config from '../../config';
 
@@ -19,12 +20,13 @@ interface IEnsureValidChatroomAndUserSelected {
 
 export interface IMakeHandlers {
 	handleMessageRouting: (client: WebSocket) => (dataString: string) => void;
-	handleRegister: (username: string) => void;
-	handleJoin: (chatroomName: string, username: string) => void;
-	handleLeave: (chatroomName: string, username: string) => void;
+	handleRegister: (data: string) => void;
+	handleJoin: (data: string) => void;
+	handleLeave: (data: string) => void;
 	handleMessage: (data: string) => void;
 	handleGetChatrooms: () => void;
-	handleDisconnect: () => void;
+	handleDisconnect: (data: string) => void;
+	setHeartbeat: (dataString: string) => void;
 }
 
 const handleEventHelper = (clientId: string, clientManager: IClientManager, chatroomManager: IChatroomManager) => {
@@ -93,7 +95,7 @@ const makeHandlers = (
 			registerResult.data.errorMessage = `The selected username: ${username} is unavailable. `;
 		}
 
-		clientManager.registerClient(clientId, client, username);
+		clientManager.registerClient(clientId, client, username, clientManager.isAlive(clientId));
 		client.send(JSON.stringify(registerResult));
 	};
 
@@ -165,7 +167,7 @@ const makeHandlers = (
 
 		handleEvent(chatroomName, createEntry)
 			.then()
-			.catch(err => console.log(err));
+			.catch(err => console.log('handleMessageError:', err.message));
 	};
 
 	const handleGetChatrooms = () => {
@@ -181,11 +183,30 @@ const makeHandlers = (
 		client.send(JSON.stringify(getChatroomResult));
 	};
 
-	const handleDisconnect = () => {
-		// remove member from all chatrooms
-		chatroomManager.removeClient(clientId);
-		// remove user profile
-		clientManager.removeClient(clientId);
+	const handleDisconnect = (dataString: string) => {
+		console.log('client disconnect...', clientId);
+		const {
+			data: { chatroomName, username },
+		}: ISocketMessage<ILeaveChatMessage> = JSON.parse(dataString);
+		const createEntry = () => ({
+			username: config.SYSTEM_NAME,
+			message: `${username} left ${chatroomName}`,
+		});
+		handleEvent(chatroomName, createEntry)
+			.then(function (chatroom) {
+				// remove member from chatroom
+				chatroom.removeUser(clientId);
+				// remove member from all chatrooms
+				chatroomManager.removeClient(clientId);
+				// remove user profile
+				clientManager.removeClient(clientId);
+				// client.send(JSON.stringify(leaveChatroomResult));
+			})
+			.catch(() => {
+				// if chatroom not selected still need to remove user
+				// remove user profile
+				clientManager.removeClient(clientId);
+			});
 	};
 
 	const handleMessageRouting = (client: WebSocket) => (dataString: string) => {
@@ -209,9 +230,19 @@ const makeHandlers = (
 			case 'disconnect':
 				client.emit('disconnect', dataString);
 				break;
+			case 'pong':
+				client.emit('pong', dataString);
+				break;
 			default:
 				console.log(`Unmatched message event: ${event}`);
 		}
+	};
+	const setHeartbeat = (dataString: string) => {
+		const {
+			data: { username },
+		}: IMessage<IPingPongMessage> = JSON.parse(dataString);
+		const isAlive = true;
+		return clientManager.setHeartbeat(clientId, client, isAlive, username ? username : undefined);
 	};
 
 	return {
@@ -222,6 +253,7 @@ const makeHandlers = (
 		handleMessage,
 		handleGetChatrooms,
 		handleDisconnect,
+		setHeartbeat,
 	};
 };
 

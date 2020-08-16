@@ -20,7 +20,7 @@
 		"check-types": "tsc",
 		"validate": "npm-run-all --parallel check-types check-format lint",
 		"build:client": "webpack --config webpack.prod.js",
-		"build:server": "babel src --extensions .js,.ts,.tsx --out-dir build",
+		"build:server": "babel src --extensions .js,.ts,.tsx --out-dir build --source-maps",
 		"build": "npm run build:server && npm run build:client",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"clean": "rimraf build"

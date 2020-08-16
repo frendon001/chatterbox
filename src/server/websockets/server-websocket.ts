@@ -16,10 +16,13 @@ export const handleConnection = ({ client, clientId }: { client: WebSocket; clie
 		handleMessage,
 		handleGetChatrooms,
 		handleDisconnect,
+		setHeartbeat,
 	} = makeHandlers(clientId, client, clientManager, chatroomManager);
 
 	console.log('client connected...', clientId);
 	clientManager.addClient(clientId, client);
+
+	client.on('pong', setHeartbeat);
 
 	client.on('register', handleRegister);
 
@@ -33,10 +36,7 @@ export const handleConnection = ({ client, clientId }: { client: WebSocket; clie
 
 	client.on('getChatrooms', handleGetChatrooms);
 
-	client.on('disconnect', function () {
-		console.log('client disconnect...', clientId);
-		handleDisconnect();
-	});
+	client.on('disconnect', handleDisconnect);
 
 	client.on('error', function (err) {
 		console.log('received error from client:', clientId);
