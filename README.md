@@ -2,6 +2,10 @@
 
 A simple chat application implemented with web-sockets
 
+### [Live Demo Here](https://chatter-box-fr.herokuapp.com/chatterbox)
+
+![preview](/images/preview.png)
+
 ## Installation
 
 **1.** Clone or Download the repository
@@ -37,8 +41,7 @@ npm run start
 
 -   Use `localhost:3030` in browser
 -   Webpack build is run in 'production' mode
--   The html file is served by the express server for all GET requests where the
-    path does not start with `/api`
+-   The html file is served by the express server for all GET requests where the path does not start with `/api`
 
 ## Technologies Used
 
@@ -51,24 +54,21 @@ npm run start
 -   Webpack
 -   Prettier
 -   ESLint
-
-## Testing
-
--   TBD
+-   WebSockets
+-   Materialize CSS
 
 ## Troubleshooting
 
 If validation script fails `npm run validate`.
 
--   Try running the formatting script to automatically fix formatting issues:
-    `npm run format`
+-   Try running the formatting script to automatically fix formatting issues: `npm run format`
 
 If there are issues with VSCode not respecting the tsconfig.json
 
--   Try overriding the default version of Typescript in VSCode by adding the
-    following setting.json configuration on your workspace
--   This will allow VSCode to use the Typescript version specified on the
-    project's package.json instead of the default VSCode version
+-   Try overriding the default version of Typescript in VSCode by adding the following setting.json configuration on
+    your workspace
+-   This will allow VSCode to use the Typescript version specified on the project's package.json instead of the default
+    VSCode version
 
 ```JSON
 {
